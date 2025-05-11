@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# NestJS build directory
+dist/
+
+# React build directory
+build/
+
+# Environment variables
+.env
+
+# Docker
+docker-compose.override.yml
+Dockerfile
+postgres_data/
+
+# VSCode settings
+.vscode/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NPM logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IntelliJ IDEA files
+.idea/

@@ -1,0 +1,146 @@
+version: '3.9'
+
+services:
+  # AUTH SERVICE
+  postgres_auth:
+    image: postgres:15
+    container_name: postgres_auth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_db
+    ports:
+      - "5443:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+
+  auth:
+    build: ./auth
+    container_name: auth_service
+    ports:
+      - "3001:3000"
+    depends_on:
+      - postgres_auth
+    environment:
+      DB_HOST: postgres_auth
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: auth_db
+
+  # STORE SERVICE
+  postgres_store:
+    image: postgres:15
+    container_name: postgres_store
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: store_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_store_data:/var/lib/postgresql/data
+
+  store:
+    build: ./store
+    container_name: store_service
+    ports:
+      - "3002:3000"
+    depends_on:
+      - postgres_store
+    environment:
+      DB_HOST: postgres_store
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: store_db
+
+  # INVENTORY SERVICE
+  postgres_inventory:
+    image: postgres:15
+    container_name: postgres_inventory
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: inventory_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_inventory_data:/var/lib/postgresql/data
+
+  inventory:
+    build: ./inventory
+    container_name: inventory_service
+    ports:
+      - "3003:3000"
+    depends_on:
+      - postgres_inventory
+    environment:
+      DB_HOST: postgres_inventory
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: inventory_db
+
+  # ORDER SERVICE
+  postgres_order:
+    image: postgres:15
+    container_name: postgres_order
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: order_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_order_data:/var/lib/postgresql/data
+
+  order:
+    build: ./order
+    container_name: order_service
+    ports:
+      - "3004:3000"
+    depends_on:
+      - postgres_order
+    environment:
+      DB_HOST: postgres_order
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: order_db
+
+  # 🌐 GATEWAY
+  gateway:
+    build: ./gateway
+    container_name: api_gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth
+      - store
+      - inventory
+      - order
+    environment:
+      # Puedes configurar variables si deseas conectar desde gateway
+      AUTH_SERVICE_URL: http://auth:3000
+      STORE_SERVICE_URL: http://store:3000
+
+  # FRONTEND
+  frontend:
+    build: ./frontend
+    container_name: react_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host
+
+volumes:
+  postgres_auth_data:
+  postgres_store_data:
+  postgres_inventory_data:
+  postgres_order_data:
