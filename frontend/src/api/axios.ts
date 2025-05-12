@@ -1,9 +1,7 @@
 import axios from 'axios';
-import type { AxiosInstance } from 'axios';
+import baseURLs from './services';
 
-const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3001",
-  withCredentials: false,
-});
-
-export default api;
+export const authApi = axios.create({ baseURL: baseURLs.auth });
+export const storeApi = axios.create({ baseURL: baseURLs.store });
+export const inventoryApi = axios.create({ baseURL: baseURLs.inventory });
+export const orderApi = axios.create({ baseURL: baseURLs.order });

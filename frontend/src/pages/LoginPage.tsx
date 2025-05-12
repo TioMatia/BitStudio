@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../api/axios";
+import { authApi } from "../api/axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post('/auth/login', { email, password });
+      const res = await authApi.post('/auth/login', { email, password });
       localStorage.setItem("token", res.data.access_token);
       setMessage("✅ Login exitoso");
     } catch (err) {
