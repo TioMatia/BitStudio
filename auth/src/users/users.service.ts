@@ -22,7 +22,7 @@ export class UsersService {
     async findByEmail(email: string) {
     return this.userRepo
         .createQueryBuilder('user')
-        .addSelect('user.password') // 👈 fuerza que el password venga
+        .addSelect('user.password') 
         .where('user.email = :email', { email })
         .getOne();
     }

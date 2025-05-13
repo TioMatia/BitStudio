@@ -1,0 +1,159 @@
+/* login.css */
+:root {
+  --primary: #000000;
+  --secondary: #ff3f6c;
+  --input-bg: #f5f5f5;
+  --text: #333; 
+  --text-light: #777;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+
+  /* Imagen de fondo + overlay semitransparente para que el form destaque */
+  background: 
+    linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+    url('../assets/bg_login.png') no-repeat center/cover;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+}
+
+.login-title {
+  margin: 0;
+  color: var(--primary);
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.login-subtitle {
+  margin: 0.25rem 0 1.5rem;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.login-form .field {
+  position: relative;
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.login-form .field span {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-top: 0.5rem;
+}
+
+.login-form .field input {
+  width: 80%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: var(--input-bg);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.login-form .field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #fff;
+}
+
+.forgot {
+  text-align: right;
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.forgot a {
+  font-size: 0.85rem;
+  color: var(--primary);
+  transition: color 0.2s;
+}
+
+.forgot a:hover {
+  color: var(--secondary);
+}
+
+.button {
+  display: inline-block;
+  width: 100%;
+  padding: 0.85rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.button-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.button-primary:hover {
+  background: var(--secondary);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.signup {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.signup a {
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.signup a:hover {
+  color: var(--secondary);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.divider hr {
+  flex: 1;
+  border: none;
+  height: 1px;
+  background: #eee;
+}
+
+.divider span {
+  margin: 0 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
