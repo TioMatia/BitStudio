@@ -59,7 +59,28 @@ const handleSubmit = async (e: React.FormEvent) => {
 e.preventDefault();
 try {
 const res = await authApi.post("/auth/login", { email, password });
-localStorage.setItem("token", res.data.access_token);
+const { access_token, user } = res.data;
+
+localStorage.setItem("token", access_token);
+localStorage.setItem("role", user.role);
+
+ switch (user.role) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "vendedor":
+        navigate("/seller/inventory");
+        break;
+      case "comprador":
+        navigate("/shop");
+        break;
+      case "repartidor":
+        navigate("/delivery/orders");
+        break;
+      default:
+        navigate("/login"); // fallback
+    }
+
 setMessage("✅ Login exitoso");
 // Redirige después de login
 navigate("/dashboard"); // O cualquier ruta que tengas

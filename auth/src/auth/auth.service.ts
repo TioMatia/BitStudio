@@ -26,13 +26,22 @@ export class AuthService {
 
    async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto);
-    const payload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-      user: { id: user.id, email: user.email }
-    };
+    const payload = {
+        sub: user.id,
+        email: user.email,
+        role: user.role, 
+        };
+
+        return {
+        access_token: this.jwtService.sign(payload),
+        user: {
+        id: user.id,
+        email: user.email,
+        role: user.role, 
+        }
+        };
   }
-// auth.service.ts
+
   async register(createUserDto: CreateUserDto) {
       const existing = await this.usersService.findByEmail(createUserDto.email);
       if (existing) {

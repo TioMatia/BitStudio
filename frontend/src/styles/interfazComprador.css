@@ -1,0 +1,132 @@
+:root {
+--primary: #06c167; /* Verde UberEats */
+--text-dark: #333;
+--text-light: #777;
+--bg-light: #f9f9f9;
+--shadow: rgba(0, 0, 0, 0.1);
+}
+
+body {
+margin: 0;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: var(--bg-light);
+}
+
+header {
+background-color: #fff;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1rem 2rem;
+box-shadow: 0 2px 4px var(--shadow);
+}
+
+header h1 {
+color: var(--primary);
+font-size: 1.5rem;
+margin: 0;
+}
+
+header input[type='text'] {
+padding: 0.5rem 1rem;
+border: 1px solid #ddd;
+border-radius: 8px;
+width: 300px;
+}
+
+header button {
+background: none;
+border: none;
+font-weight: 500;
+color: var(--text-dark);
+cursor: pointer;
+}
+
+section.store-list {
+padding: 2rem;
+}
+
+section.store-list h2 {
+font-size: 1.25rem;
+margin-bottom: 1rem;
+color: var(--text-dark);
+}
+
+.store-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1.5rem;
+margin-top: 1rem;
+}
+
+.store-card {
+background: #fff;
+border-radius: 1rem;
+box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+overflow: hidden;
+transition: transform 0.3s ease;
+}
+
+.store-card:hover {
+transform: scale(1.02);
+}
+
+.store-card img {
+width: 100%;
+height: 200px;
+object-fit: cover;
+}
+
+.store-card .info {
+padding: 1rem;
+}
+
+.store-card h3 {
+margin: 0;
+font-size: 1.1rem;
+color: var(--text-dark);
+}
+
+.store-card p {
+margin: 0.3rem 0;
+font-size: 0.85rem;
+color: var(--text-light);
+}
+
+.store-card .meta {
+display: flex;
+justify-content: space-between;
+font-size: 0.85rem;
+margin-top: 0.5rem;
+color: var(--text-light);
+}
+
+@keyframes slideFadeIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.store-card-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.store-card-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 300ms ease;
+}
+.store-card-exit {
+  opacity: 1;
+}
+.store-card-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 200ms ease;
+}
+
