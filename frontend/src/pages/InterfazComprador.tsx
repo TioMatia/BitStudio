@@ -83,6 +83,9 @@ alt={store.name}
 </AnimatePresence>
 </div>
 </section>
+  <footer className="comprador-footer">
+    <p>© 2025 BitStudio. Todos los derechos reservadoss.</p>
+  </footer>
 </div>
 );
 };

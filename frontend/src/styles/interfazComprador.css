@@ -6,6 +6,10 @@
 --shadow: rgba(0, 0, 0, 0.1);
 }
 
+html, body {
+height: 100%;
+overflow-y: auto;
+}
 body {
 margin: 0;
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -152,4 +156,23 @@ cursor: pointer;
 }
 .back-button:hover {
 background: #ccc;
+}
+
+.comprador-footer {
+text-align: center;
+margin-top: 2rem;
+color: #888;
+font-size: 0.9rem;
+padding-bottom: 1rem;
+}
+
+.page {
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+overflow-y: auto;
+}
+
+.store-list {
+flex: 1;
 }
