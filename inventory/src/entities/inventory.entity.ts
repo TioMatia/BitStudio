@@ -1,25 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Inventory {
-  @PrimaryGeneratedColumn()
-  id: number;
+@PrimaryGeneratedColumn()
+id: number;
 
-  @Column()
-  name: string;
+@Column()
+name: string;
 
-  @Column({ type: 'text', nullable: true })
-  description: string;
+@Column('text', { nullable: true })
+description: string;
 
-  @Column()
-  location: string;
+@Column('float')
+price: number;
 
-  @Column('decimal')
-  price: number;
+@Column()
+quantity: number;
 
-  @Column('int')
-  quantity: number;
+@Column()
+storeId: number; 
 
-  @CreateDateColumn()
-  createdAt: Date;
+@CreateDateColumn()
+createdAt: Date;
 }

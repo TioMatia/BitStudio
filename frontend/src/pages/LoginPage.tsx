@@ -46,7 +46,7 @@ export default LoginPage;*/
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {authApi} from "../api/axios"; // Asegúrate de que axios esté bien exportado
+import {authApi} from "../api/axios"; 
 import "../styles/login.css";
 
 const LoginPage: React.FC = () => {

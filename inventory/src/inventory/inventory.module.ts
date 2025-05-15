@@ -5,8 +5,8 @@ import { InventoryService } from './inventory.service';
 import { InventoryController } from './inventory.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Inventory])],
-  controllers: [InventoryController],
-  providers: [InventoryService],
+imports: [TypeOrmModule.forFeature([Inventory])],
+providers: [InventoryService],
+controllers: [InventoryController],
 })
 export class InventoryModule {}

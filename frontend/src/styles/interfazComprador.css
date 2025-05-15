@@ -1,5 +1,5 @@
 :root {
---primary: #06c167; /* Verde UberEats */
+--primary: #06c167; 
 --text-dark: #333;
 --text-light: #777;
 --bg-light: #f9f9f9;
@@ -130,3 +130,26 @@ transform: translateY(0);
   transition: all 200ms ease;
 }
 
+.inventory-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+gap: 1rem;
+margin-top: 1rem;
+}
+.inventory-card {
+background: #fff;
+padding: 1rem;
+border-radius: 1rem;
+box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.back-button {
+margin: 1rem 0;
+padding: 0.5rem 1rem;
+background: #e0e0e0;
+border: none;
+border-radius: 0.5rem;
+cursor: pointer;
+}
+.back-button:hover {
+background: #ccc;
+}

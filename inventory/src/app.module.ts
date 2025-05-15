@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Inventory } from './entities/inventory.entity';
 import { InventoryModule } from './inventory/inventory.module';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
