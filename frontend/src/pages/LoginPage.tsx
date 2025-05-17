@@ -33,12 +33,12 @@ localStorage.setItem("role", user.role);
         navigate("/delivery/orders");
         break;
       default:
-        navigate("/login"); // fallback
+        navigate("/login");
     }
 
 setMessage("✅ Login exitoso");
 // Redirige después de login
-navigate("/dashboard"); // O cualquier ruta que tengas
+navigate("/shop"); 
 } catch (err: any) {
 console.error("❌ Error:", err);
 setMessage("❌ Credenciales inválidas");

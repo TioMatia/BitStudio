@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 
@@ -14,5 +14,9 @@ return this.storeService.create(dto);
 @Get()
 findAll() {
 return this.storeService.findAll();
+}
+@Get(':id')
+getStoreById(@Param('id') id: number) {
+return this.storeService.findOne(id);
 }
 }
