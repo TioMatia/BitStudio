@@ -55,37 +55,38 @@ return (
       </header>
 
     <section className="store-list">
-    <h2>Tiendas disponibles</h2>
-    {error && <p style={{ color: "red" }}>{error}</p>}
-    <div className="store-grid">
-    <AnimatePresence>
-    {filteredStores.map((store) => (
-    <motion.div
-    key={store.id}
-    layout
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -20 }}
-    transition={{ duration: 0.3 }}
-    className="store-card"
-    onClick={() => navigate(`/shop/${store.id}`)}
-    >
-    <img
-    src={store.image || defaultStoreImage}
-    alt={store.name}
-    />
-    <div className="info">
-    <h3>{store.name}</h3>
-    <div className="meta">
-    <span>{store.estimatedTime || "20–30 min"}</span>
-    <span>⭐ {store.rating ?? "4.5"}</span>
-    <span>${store.deliveryFee?.toFixed(2) ?? "2.99"} envío</span>
-    </div>
-    </div>
-    </motion.div>
-    ))}
-    </AnimatePresence>
-    </div>
+      <h2>Tiendas disponibles</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <div className="store-grid">
+        <AnimatePresence>
+          {filteredStores.map((store) => (
+            <motion.div
+              key={store.id}
+              layout
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="store-card"
+              onClick={() => navigate(`/shop/${store.id}`)}
+              >
+              <img
+              src={store.image || defaultStoreImage}
+              alt={store.name}
+              />
+              <div className="info">
+                <h3>{store.name}</h3>
+                <div className="meta">
+                  <span>{store.estimatedTime || "20–30 min"}</span>
+                  <span>⭐ {store.rating ?? "4.5"}</span>
+                  <span>${store.deliveryFee?.toFixed(2) ?? "2.99"} envío</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </section>
       <footer className="comprador-footer">
         <p>© 2025 BitStudio. Todos los derechos reservadoss.</p>

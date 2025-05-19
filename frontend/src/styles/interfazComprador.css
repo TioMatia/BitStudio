@@ -25,7 +25,7 @@ padding: 1rem 2rem;
 box-shadow: 0 2px 4px var(--shadow);
 }
 
-header h1 {
+.header-top {
 color: var(--primary);
 font-size: 1.5rem;
 margin: 0;

@@ -7,7 +7,7 @@ import InventarioTienda from './pages/InventarioTienda';
 import PrivateRouteComprador from "./Restricciones/PrivateRouteComprador";
 import NotFound from './pages/NotFound';
 import CarritoPage from "./pages/CarritoPage";
-import ShopLayout from './layouts/shopLayout';
+import ShopLayout from './layouts/ShopLayout';
 
 function App() {
   return (

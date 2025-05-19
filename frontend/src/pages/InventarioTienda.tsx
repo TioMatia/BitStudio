@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
-
 import { inventoryApi, storeApi } from "../api/axios";
 import "../styles/inventarioTienda.css";
 import defaultStoreImage from "../assets/FotoPredeterminadaTienda.png";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store";
-import { addItem, clearCart } from "../store/carritoTienda";
+import { addItem, setItemQuantity, removeItem } from "../store/carritoTienda";
+import { FaTrash } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 interface InventoryItem {
   id: number;
@@ -39,12 +39,10 @@ const InventarioTienda: React.FC = () => {
   const [store, setStore] = useState<Store | null>(null);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
+  const [quantities, setQuantities] = useState<Record<number, number>>({});
 
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
-
-  // Guardar cantidad seleccionada por producto
-  const [quantities, setQuantities] = useState<Record<number, number>>({});
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -75,42 +73,6 @@ const InventarioTienda: React.FC = () => {
   const filteredItems = items.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
-
-  const handleQuantityChange = (itemId: number, value: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [itemId]: value,
-    }));
-  };
-
-  const handleAddToCart = (item: InventoryItem) => {
-    const quantity = quantities[item.id] || 1;
-    const currentStoreId = Number(storeId);
-
-    if (quantity > item.quantity) {
-      alert(`Solo hay ${item.quantity} unidades disponibles.`);
-      return;
-    }
-
-    if (cart.storeId && cart.storeId !== currentStoreId) {
-      const confirmed = window.confirm("Ya tienes productos de otra tienda. ¿Quieres reemplazar el carrito?");
-      if (!confirmed) return;
-
-      dispatch(clearCart());
-    }
-
-    dispatch(
-      addItem({
-        storeId: currentStoreId,
-        item: {
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity,
-        },
-      })
-    );
-  };
 
   return (
     <div className="inventario-page">
@@ -153,26 +115,95 @@ const InventarioTienda: React.FC = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div className="inventory-grid">
-        {filteredItems.map((item) => (
-          <div key={item.id} className="inventory-card">
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <p><strong>${item.price.toFixed(2)}</strong></p>
-            <p>{item.quantity} disponibles</p>
-            <label>
-              Cantidad:{" "}
-              <input
-                type="number"
-                min={1}
-                max={item.quantity}
-                value={quantities[item.id] || 1}
-                onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                style={{ width: "60px", marginRight: "0.5rem" }}
-              />
-            </label>
-            <button onClick={() => handleAddToCart(item)}>Agregar al carrito</button>
-          </div>
-        ))}
+        {filteredItems.map((item) => {
+          const itemInCart = cart.items.find((ci) => ci.id === item.id);
+          const quantityValue = quantities[item.id] ?? itemInCart?.quantity ?? 1;
+
+          return (
+            <motion.div
+              key={item.id}
+              className="inventory-card"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3>{item.name}</h3>
+              <p>{item.description}</p>
+              <p><strong>${item.price.toFixed(2)}</strong></p>
+              <p>{item.quantity} disponibles</p>
+
+              {itemInCart ? (
+                <>
+                  <label>
+                    Cantidad:{" "}
+                    <input
+                      type="number"
+                      min={1}
+                      max={item.quantity}
+                      value={quantityValue}
+                      onChange={(e) => {
+                        const value = Math.min(
+                          item.quantity,
+                          Math.max(1, parseInt(e.target.value) || 1)
+                        );
+                        setQuantities((prev) => ({ ...prev, [item.id]: value }));
+                      }}
+                      onBlur={() => {
+                        dispatch(
+                          setItemQuantity({
+                            itemId: item.id,
+                            quantity: quantityValue,
+                          })
+                        );
+                      }}
+                      style={{ width: "60px", marginRight: "0.5rem" }}
+                    />
+                    
+                  </label>
+                   <button disabled style={{ backgroundColor: "#d4edda", color: "#155724", marginLeft: "1.5rem", marginTop:"1rem"}}>
+                     Producto agregado
+                  </button>
+         
+                  <button
+                    onClick={() => dispatch(removeItem(item.id))}
+                    title="Eliminar del carrito"
+                    style={{
+                      backgroundColor: "#f8d7da",
+                      color: "#721c24",
+                      border: "none",
+                      borderRadius: "4px",
+                      padding: "0.5rem",
+                      marginLeft: "0.5rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <FaTrash />
+                  </button>
+                  
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    dispatch(
+                      addItem({
+                        storeId: Number(storeId),
+                        item: {
+                          id: item.id,
+                          name: item.name,
+                          price: item.price,
+                          quantity: 1,
+                        },
+                      })
+                    );
+                    setQuantities((prev) => ({ ...prev, [item.id]: 1 }));
+                  }}
+                >
+                  Agregar al carrito
+                </button>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
