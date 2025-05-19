@@ -36,14 +36,16 @@ padding: 0.5rem 1rem;
 border: 1px solid #ddd;
 border-radius: 8px;
 width: 300px;
+
 }
 
-header button {
+header input{
 background: none;
 border: none;
 font-weight: 500;
 color: var(--text-dark);
-cursor: pointer;
+cursor: text;
+align-content: center;
 }
 
 section.store-list {
@@ -178,4 +180,39 @@ overflow-y: auto;
 
 .store-list {
 flex: 1;
+}
+
+.comprador-header {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.header-top {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.comprador-header h1 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.search-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.search-wrapper input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 300px;
+  background: none;
+  font-weight: 500;
+  color: var(--text-dark);
 }

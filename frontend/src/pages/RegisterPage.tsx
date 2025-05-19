@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.css";
-import { authApi } from "../api/axios"; // Asegúrate que esto sea un AxiosInstance
+import { authApi } from "../api/axios"; 
 
 const RegisterPage: React.FC = () => {
 const [firstName, setFirstName] = useState("");
