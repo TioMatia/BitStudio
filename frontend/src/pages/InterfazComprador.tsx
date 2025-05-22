@@ -41,9 +41,6 @@ store.name.toLowerCase().includes(search.toLowerCase())
 return (
   <div className="page">
       <header className="comprador-header">
-        <div className="header-top">
-          <h1>TIENDAS</h1>
-        </div>
         <div className="search-wrapper">
           <input
             type="text"
