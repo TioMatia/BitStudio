@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import CarritoPage from "./pages/CarritoPage";
 import ShopLayout from './layouts/ShopLayout';
 import ForbiddenPage from "./pages/Forbidden";
+import CrearTiendaPage from "./pages/CrearTiendaPage";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forbidden" element={<ForbiddenPage />} />
+      <Route path="/seller/crear-tienda" element={<CrearTiendaPage />} />
       
         {/* Rutas protegidas solo para comprador */}
       <Route element={<PrivateRouteComprador />}>
