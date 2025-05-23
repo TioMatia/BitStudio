@@ -35,6 +35,9 @@ export class UsersService {
     return user;
   }
 
+  async findOne(id: number): Promise<User | null> {
+  return this.userRepo.findOne({ where: { id } });
+  }
     
 
 }

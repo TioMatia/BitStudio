@@ -10,7 +10,7 @@ import CarritoPage from "./pages/CarritoPage";
 import ShopLayout from './layouts/ShopLayout';
 import ForbiddenPage from "./pages/Forbidden";
 import CrearTiendaPage from "./pages/CrearTiendaPage";
-
+import MyStorePage from './pages/MyStorePage';
 function App() {
 
   return (
@@ -20,7 +20,7 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forbidden" element={<ForbiddenPage />} />
       <Route path="/seller/crear-tienda" element={<CrearTiendaPage />} />
-      
+      <Route path="/seller/mystore" element={<MyStorePage />} />
         {/* Rutas protegidas solo para comprador */}
       <Route element={<PrivateRouteComprador />}>
         <Route element={<ShopLayout />}>

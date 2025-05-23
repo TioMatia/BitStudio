@@ -33,9 +33,9 @@ const LoginPage: React.FC = () => {
         case "vendedor":
           const storeRes = await storeApi.get(`/stores/user/${user.id}`);
           if (storeRes.data && storeRes.data.id) {
-            navigate("/mystore");
+            navigate("/seller/mystore");
           }else{
-            navigate("/crear-tienda")
+            navigate("/seller/crear-tienda")
           }
           break;
         case "comprador":

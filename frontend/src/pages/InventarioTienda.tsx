@@ -93,11 +93,11 @@ const InventarioTienda: React.FC = () => {
             <div className="store-meta">
               <p><strong>Propietario:</strong> {store.owner}</p>
               <p><strong>Ubicación:</strong> {store.location}</p>
+              <p><strong>Descripción:</strong>{store.description}</p>
               <p><strong>Teléfono:</strong> {store.phone}</p>
               <p><strong>Tiempo estimado:</strong> {store.estimatedTime}</p>
               <p><strong>Rating:</strong> ⭐ {store.rating}</p>
               <p><strong>Envío:</strong> ${store.deliveryFee?.toFixed(2)}</p>
-              <p><strong>Score:</strong> {store.score}</p>
               <p><strong>Creado el:</strong> {new Date(store.createdAt || "").toLocaleDateString()}</p>
             </div>
           </div>

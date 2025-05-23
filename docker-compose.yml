@@ -54,6 +54,7 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_NAME: store_db
+      USER_SERVICE_URL: http://auth:3000
 
   # INVENTORY SERVICE
   postgres_inventory:

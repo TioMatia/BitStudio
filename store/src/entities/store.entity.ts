@@ -26,7 +26,7 @@ image: string;
 @Column({ type: 'float', default: 0 })
 deliveryFee: number;
 
-@Column({ type: 'float', default: 4.5 })
+@Column({ type: 'float' })
 rating: number;
 
 @Column({ nullable: true })
