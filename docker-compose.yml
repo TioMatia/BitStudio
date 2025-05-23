@@ -55,6 +55,9 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: store_db
       USER_SERVICE_URL: http://auth:3000
+      CLOUDINARY_NAME: dffrle1y3
+      CLAODINARY_KEY: 129683113734629
+      CLAODINARY_SECRET: MFoMn0AOBnE2a4tUaGeczhzC9h8
 
   # INVENTORY SERVICE
   postgres_inventory:

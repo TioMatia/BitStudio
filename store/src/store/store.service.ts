@@ -27,12 +27,32 @@ constructor(
         });
     }
 
-    async findOne(id: number): Promise<Store> {
-        console.log('Buscando tienda con id:', id);
-        const store = await this.storeRepository.findOne({ where: { id } });
-        if (!store) throw new NotFoundException('Store not found');
-            return store;
-        }
+    async findOne(id: number): Promise<any> {
+    console.log('Buscando tienda con id:', id);
+    const store = await this.storeRepository.findOne({ where: { id } });
+    if (!store) throw new NotFoundException('Store not found');
+
+    try {
+    const response = await lastValueFrom(
+    this.httpService.get(`${process.env.USER_SERVICE_URL}/users/${store.userId}`)
+    );
+    const user = response.data;
+    return {
+  ...store,
+  owner: {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+  },
+};
+} catch (err) {
+console.error('Error fetching user info:', err.message);
+return {
+...store,
+owner: null,
+};
+}
+}
 
     async findByUserId(userId: number): Promise<any> {
         const store = await this.storeRepository.findOne({ where: { userId } });

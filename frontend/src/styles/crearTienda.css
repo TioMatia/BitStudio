@@ -29,6 +29,7 @@ margin-bottom: 1.5rem;
 
 .create-form .field {
 margin-bottom: 1.25rem;
+margin-right: 1.5rem;
 text-align: left;
 }
 
@@ -65,12 +66,14 @@ border: none;
 border-radius: 8px;
 cursor: pointer;
 transition: background 0.2s, box-shadow 0.2s;
+justify-content: space-between;
 }
 
 .button-primary {
 background: var(--primary);
 color: #fff;
 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
 }
 
 .button-primary:hover {

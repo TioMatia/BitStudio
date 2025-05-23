@@ -17,6 +17,13 @@ interface InventoryItem {
   quantity: number;
 }
 
+
+interface Owner {
+firstName: string;
+lastName: string;
+email?: string;
+}
+
 interface Store {
   id: number;
   name: string;
@@ -25,12 +32,13 @@ interface Store {
   deliveryFee?: number;
   rating?: number;
   estimatedTime?: string;
-  owner?: string;
+  owner?: Owner;
   location?: string;
   phone?: string;
   score?: number;
   createdAt?: string;
 }
+
 
 const InventarioTienda: React.FC = () => {
   const { storeId } = useParams<{ storeId: string }>();
@@ -91,13 +99,17 @@ const InventarioTienda: React.FC = () => {
             <h1>{store.name}</h1>
             <p>{store.description}</p>
             <div className="store-meta">
-              <p><strong>Propietario:</strong> {store.owner}</p>
+              {store.owner && (
+              <p><strong>Propietario:</strong> {store.owner.firstName} {store.owner.lastName}</p>
+              )}
               <p><strong>Ubicación:</strong> {store.location}</p>
-              <p><strong>Descripción:</strong>{store.description}</p>
-              <p><strong>Teléfono:</strong> {store.phone}</p>
+              {store.description && <p><strong>Descripción:</strong> {store.description}</p>}
+              {store.phone && <p><strong>Teléfono:</strong> {store.phone}</p>}
+              {store.estimatedTime && (
               <p><strong>Tiempo estimado:</strong> {store.estimatedTime}</p>
-              <p><strong>Rating:</strong> ⭐ {store.rating}</p>
-              <p><strong>Envío:</strong> ${store.deliveryFee?.toFixed(2)}</p>
+              )}
+              <p><strong>Rating:</strong> ⭐ {store.rating ?? 0}</p>
+              <p><strong>Envío:</strong> ${store.deliveryFee?.toFixed(2) ?? "0.00"}</p>
               <p><strong>Creado el:</strong> {new Date(store.createdAt || "").toLocaleDateString()}</p>
             </div>
           </div>

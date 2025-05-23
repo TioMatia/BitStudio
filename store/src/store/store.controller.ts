@@ -1,6 +1,9 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/create-store.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('stores')
 export class StoreController {
@@ -10,6 +13,7 @@ constructor(private readonly storeService: StoreService) {}
 create(@Body() dto: CreateStoreDto) {
 return this.storeService.create(dto);
 }
+
 
 @Get()
 findAll() {
@@ -24,5 +28,4 @@ return this.storeService.findOne(id);
 getStoreByUserId(@Param('userId') userId: number) {
 return this.storeService.findByUserId(userId);
 }
-
 }

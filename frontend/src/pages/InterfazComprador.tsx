@@ -75,9 +75,9 @@ return (
               <div className="info">
                 <h3>{store.name}</h3>
                 <div className="meta">
-                  <span>{store.estimatedTime || "20–30 min"}</span>
-                  <span>⭐ {store.rating ?? "4.5"}</span>
-                  <span>${store.deliveryFee?.toFixed(2) ?? "2.99"} envío</span>
+                  <span>{store.estimatedTime}</span>
+                  <span>⭐ {store.rating}</span>
+                  <span>${store.deliveryFee?.toFixed(2)} envío</span>
                 </div>
               </div>
             </motion.div>
