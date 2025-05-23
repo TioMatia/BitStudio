@@ -10,6 +10,9 @@ owner: string;
 @IsString()
 location: string;
 
+@IsNumber()
+userId: number
+
 @IsOptional()
 @IsString()
 phone?: string;
@@ -33,4 +36,6 @@ rating?: number;
 @IsOptional()
 @IsString()
 estimatedTime?: string;
+
+
 }

@@ -34,11 +34,7 @@ const RegisterPage: React.FC = () => {
         setMessage("✅ Usuario registrado correctamente");
 
         setTimeout(() => {
-          if (form.role === "vendedor") {
-            navigate("/seller/crear-tienda");
-          } else {
             navigate("/login");
-          }
         }, 1500);
       } else {
         setMessage("❌ No se pudo registrar");

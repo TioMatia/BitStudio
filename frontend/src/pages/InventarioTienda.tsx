@@ -76,7 +76,7 @@ const InventarioTienda: React.FC = () => {
 
   return (
     <div className="inventario-page">
-      <button onClick={() => navigate(-1)} className="back-button">
+      <button onClick={() => navigate("/shop")} className="back-button">
         ← Volver
       </button>
 
@@ -184,9 +184,24 @@ const InventarioTienda: React.FC = () => {
               ) : (
                 <button
                   onClick={() => {
+                    const currentStoreId = cart.storeId;
+                    const newStoreId = Number(storeId);
+
+                    // Si ya hay productos en el carrito y son de otra tienda
+                    if (currentStoreId && currentStoreId !== newStoreId) {
+                      const confirmClear = window.confirm(
+                        "Este producto es de otra tienda. Se eliminará el carrito actual. ¿Desea continuar?"
+                      );
+                      if (!confirmClear) return;
+
+                      // Limpiar carrito si el usuario acepta
+                      dispatch({ type: "cart/clearCart" });
+                    }
+
+                    // Agregar el nuevo producto
                     dispatch(
                       addItem({
-                        storeId: Number(storeId),
+                        storeId: newStoreId,
                         item: {
                           id: item.id,
                           name: item.name,

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { authApi } from "../api/axios";
+import { authApi, storeApi } from "../api/axios";
 import { loadCart } from "../store/carritoTienda";
 import "../styles/login.css";
 
@@ -22,16 +22,21 @@ const LoginPage: React.FC = () => {
       localStorage.setItem("role", user.role);
       localStorage.setItem("userId", user.id);
 
-      // Carga el carrito del usuario
+  
       dispatch(loadCart());
 
-      // Redirigir según rol
+  
       switch (user.role) {
         case "admin":
           navigate("/admin/dashboard");
           break;
         case "vendedor":
-          navigate("/seller/inventory");
+          const storeRes = await storeApi.get(`/stores/user/${user.id}`);
+          if (storeRes.data && storeRes.data.id) {
+            navigate("/mystore");
+          }else{
+            navigate("/crear-tienda")
+          }
           break;
         case "comprador":
           navigate("/shop");

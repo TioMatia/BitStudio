@@ -1,5 +1,4 @@
-
-import {Entity,PrimaryGeneratedColumn,Column,CreateDateColumn, OneToMany} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Store {
@@ -39,4 +38,6 @@ score: number;
 @CreateDateColumn()
 createdAt: Date;
 
+@Column()
+userId: number; 
 }

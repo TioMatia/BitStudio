@@ -22,17 +22,19 @@ const Header: React.FC = () => {
   return (
     <div className="header-container">
       <div className="header-title">BITSTUDIO</div>
-      <div className="header-cart">
-        <button className="cart-button" onClick={() => navigate("/cart")}>
-          <FaShoppingCart className="cart-icon" />
-          <span className="cart-text">Ver Carrito</span>
-          {cartItems.length > 0 && <span className="cart-indicator" />}
-        </button>
+        <div className="header-actions">
+          <button className="logout-button" onClick={handleLogout}>
+            Cerrar sesión
+          </button>
 
-        <button className="logout-button" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-      </div>
+          <div className="vertical-separator" />
+
+          <button className="cart-button" onClick={() => navigate("/cart")}>
+            <FaShoppingCart className="cart-icon" />
+            <span className="cart-text">Ver Carrito</span>
+            {cartItems.length > 0 && <span className="cart-indicator" />}
+          </button>
+        </div>
     </div>
   );
 };

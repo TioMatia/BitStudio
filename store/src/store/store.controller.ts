@@ -19,4 +19,10 @@ return this.storeService.findAll();
 getStoreById(@Param('id') id: number) {
 return this.storeService.findOne(id);
 }
+
+@Get('user/:userId')
+getStoreByUserId(@Param('userId') userId: number) {
+return this.storeService.findByUserId(userId);
+}
+
 }

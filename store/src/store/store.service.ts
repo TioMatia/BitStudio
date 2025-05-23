@@ -30,4 +30,8 @@ constructor(
         if (!store) throw new NotFoundException('Store not found');
             return store;
         }
+
+    async findByUserId(userId: number): Promise<Store | null> {
+    return this.storeRepository.findOne({ where: { userId } });
+    }
 }
