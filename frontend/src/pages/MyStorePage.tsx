@@ -142,10 +142,10 @@ const MyStorePage: React.FC = () => {
               onClick={() => setModalOpen(true)}
               className="add-product-button"
             >
-              Agregar producto(s) +
+              Agregar producto(s) 
             </button>
 
-            <div className="inventory-grid">
+            <div className="inventory-grid"> 
               {items.map((item) => (
                 <div key={item.id} className="inventory-card-horizontal">
                   <img

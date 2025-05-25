@@ -37,7 +37,7 @@ interface Store {
   estimatedTime?: string;
   owner?: Owner;
   location?: string;
-  phone?: string;
+  phone?: string; 
   score?: number;
   createdAt?: string;
 }
@@ -106,10 +106,9 @@ const InventarioTienda: React.FC = () => {
               <p><strong>Propietario:</strong> {store.owner.firstName} {store.owner.lastName}</p>
               )}
               <p><strong>Ubicación:</strong> {store.location}</p>
-              {store.description && <p><strong>Descripción:</strong> {store.description}</p>}
               {store.phone && <p><strong>Teléfono:</strong> {store.phone}</p>}
               {store.estimatedTime && (
-              <p><strong>Tiempo estimado:</strong> {store.estimatedTime}</p>
+              <p><strong>Tiempo estimado:</strong> {store.estimatedTime} minutos</p>
               )}
               <p><strong>Rating:</strong> ⭐ {store.rating ?? 0}</p>
               <p><strong>Envío:</strong> ${store.deliveryFee?.toFixed(2) ?? "0.00"}</p>
@@ -130,114 +129,101 @@ const InventarioTienda: React.FC = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div className="inventory-grid">
-        {filteredItems.map((item) => {
+       {filteredItems.map((item) => {
           const itemInCart = cart.items.find((ci) => ci.id === item.id);
           const quantityValue = quantities[item.id] ?? itemInCart?.quantity ?? 1;
 
           return (
-            <motion.div
-              key={item.id}
-              className="inventory-card"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img
-                src={item.image || defaultInventoryImage}
-                alt={item.name}
-                className="inventory-image"
-              />
-
+          <motion.div
+            key={item.id}
+            className="inventory-card-horizontal"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+              >
+            <img
+              src={item.image || defaultInventoryImage}
+              alt={item.name}
+              className="inventory-image-horizontal"
+            />
+            <div className="inventory-info">
               <h3>{item.name}</h3>
               <p>{item.description}</p>
               <p><strong>${item.price.toFixed(2)}</strong></p>
               <p>{item.quantity} disponibles</p>
+            </div>
+                  <div className="inventory-actions-right">
+                      {itemInCart ? (
+                        <>
+                          <label className="quantity-label">
+                            Cantidad:
+                            <input
+                              type="number"
+                              min={1}
+                              max={item.quantity}
+                              value={quantityValue}
+                              onChange={(e) => {
+                                const value = Math.min(
+                                  item.quantity,
+                                  Math.max(1, parseInt(e.target.value) || 1)
+                                );
+                                setQuantities((prev) => ({ ...prev, [item.id]: value }));
+                              }}
+                              onBlur={() => {
+                                dispatch(
+                                  setItemQuantity({
+                                    itemId: item.id,
+                                    quantity: quantityValue,
+                                  })
+                                );
+                              }}
+                              className="quantity-input"
+                            />
+                          </label>
+                          <div className="added-message">✅ Producto agregado</div>
+                          <button
+                            onClick={() => dispatch(removeItem(item.id))}
+                            title="Eliminar del carrito"
+                            className="remove-button"
+                          >
+                            <FaTrash /> Quitar
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          className="add-button"
+                          onClick={() => {
+                            const currentStoreId = cart.storeId;
+                            const newStoreId = Number(storeId);
 
-              {itemInCart ? (
-                <>
-                  <label>
-                    Cantidad:{" "}
-                    <input
-                      type="number"
-                      min={1}
-                      max={item.quantity}
-                      value={quantityValue}
-                      onChange={(e) => {
-                        const value = Math.min(
-                          item.quantity,
-                          Math.max(1, parseInt(e.target.value) || 1)
-                        );
-                        setQuantities((prev) => ({ ...prev, [item.id]: value }));
-                      }}
-                      onBlur={() => {
-                        dispatch(
-                          setItemQuantity({
-                            itemId: item.id,
-                            quantity: quantityValue,
-                          })
-                        );
-                      }}
-                      style={{ width: "60px", marginRight: "0.5rem" }}
-                    />
-                    
-                  </label>
-                   <button disabled style={{ backgroundColor: "#d4edda", color: "#155724", marginLeft: "1.5rem", marginTop:"1rem"}}>
-                     Producto agregado
-                  </button>
-         
-                  <button
-                    onClick={() => dispatch(removeItem(item.id))}
-                    title="Eliminar del carrito"
-                    style={{
-                      backgroundColor: "#f8d7da",
-                      color: "#721c24",
-                      border: "none",
-                      borderRadius: "4px",
-                      padding: "0.5rem",
-                      marginLeft: "0.5rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <FaTrash />
-                  </button>
-                  
-                </>
-              ) : (
-                <button
-                  onClick={() => {
-                    const currentStoreId = cart.storeId;
-                    const newStoreId = Number(storeId);
+                            if (currentStoreId && currentStoreId !== newStoreId) {
+                              const confirmClear = window.confirm(
+                                "Este producto es de otra tienda. Se eliminará el carrito actual. ¿Desea continuar?"
+                              );
+                              if (!confirmClear) return;
+                              dispatch({ type: "cart/clearCart" });
+                            }
 
-                    // Si ya hay productos en el carrito y son de otra tienda
-                    if (currentStoreId && currentStoreId !== newStoreId) {
-                      const confirmClear = window.confirm(
-                        "Este producto es de otra tienda. Se eliminará el carrito actual. ¿Desea continuar?"
-                      );
-                      if (!confirmClear) return;
+                            dispatch(
+                              addItem({
+                                storeId: newStoreId,
+                                item: {
+                                  id: item.id,
+                                  name: item.name,
+                                  price: item.price,
+                                  quantity: 1,
+                                },
+                              })
+                            );
+                            setQuantities((prev) => ({ ...prev, [item.id]: 1 }));
+                          }}
+                        >
+                          Agregar al carrito
+                        </button>
+                      )}
+                    </div>
+                  </motion.div>
 
-                      // Limpiar carrito si el usuario acepta
-                      dispatch({ type: "cart/clearCart" });
-                    }
-
-                    // Agregar el nuevo producto
-                    dispatch(
-                      addItem({
-                        storeId: newStoreId,
-                        item: {
-                          id: item.id,
-                          name: item.name,
-                          price: item.price,
-                          quantity: 1,
-                        },
-                      })
-                    );
-                    setQuantities((prev) => ({ ...prev, [item.id]: 1 }));
-                  }}
-                >
-                  Agregar al carrito
-                </button>
-              )}
-            </motion.div>
           );
         })}
       </div>

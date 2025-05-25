@@ -104,7 +104,7 @@ const CrearTiendaPage: React.FC = () => {
 <input type="number" name="deliveryFee" min="0" step="0.01" value={form.deliveryFee} onChange={handleChange} />
 </div>
 <div className="field">
-<span>Tiempo estimado (opcional)</span>
+<span>Tiempo estimado en minutos (opcional)</span>
 <input name="estimatedTime" value={form.estimatedTime} onChange={handleChange} />
 </div>
 <button type="submit" className="button button-primary">

@@ -75,17 +75,6 @@ text-align: center;
 padding: 2rem;
 }
 
-.add-product-btn {
-margin-top: 2rem;
-padding: 0.6rem 1.2rem;
-font-size: 1rem;
-background-color: #006400;
-color: white;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-}
-
 .modal-backdrop {
 position: fixed;
 top: 0;
@@ -136,6 +125,10 @@ gap: 1rem;
   margin-bottom: 1rem;
 }
 
+.add-product-button:hover{
+background-color: #0056b3;
+}
+
 .inventory-grid {
 display: grid;
 grid-template-columns: repeat(3, 1fr);
@@ -180,7 +173,7 @@ object-fit: cover;
 border-radius: 0.5rem;
 flex-shrink: 0;
 }
-
+ 
 .modal-backdrop {
   position: fixed;
   top: 0;

@@ -18,15 +18,15 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ open, onClose, prod
   });
 
   useEffect(() => {
-    if (product) {
+    if (open && product) {
       setForm({
         name: product.name || "",
         description: product.description || "",
-        price: product.price.toString(),
-        quantity: product.quantity.toString(),
+        price: product.price?.toString() || "",
+        quantity: product.quantity?.toString() || "",
       });
     }
-  }, [product]);
+  }, [open, product]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -59,28 +59,38 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ open, onClose, prod
       <div className="modal-card">
         <h3>Editar Producto</h3>
         <form onSubmit={handleSubmit}>
-            
+
+          <label> Nombre:
           <input 
             name="name" 
             value={form.name} 
             onChange={handleChange} 
             placeholder="Nombre" 
             required />
-
+          </label>
+          <label> Descripción:
           <textarea name="description" 
             value={form.description} 
             onChange={handleChange} 
             placeholder="Descripción" />
+          </label>
 
+          <label> Precio:
+          <div className="input-with-prefix"> 
+            <span className="prefix">$</span>
           <input
             name="price"
             type="number"
             value={form.price}
             min="0"
             onChange={handleChange}
-            placeholder="Precio"
+            placeholder="$"
             required
             />
+            </div>
+          </label>
+
+          <label> Cantidad
             <input
             name="quantity"
             type="number"
@@ -90,6 +100,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ open, onClose, prod
             placeholder="Cantidad"
             required
             />
+          </label>
 
           <div className="modal-actions">
             <button type="submit" className="button button-primary">Guardar</button>

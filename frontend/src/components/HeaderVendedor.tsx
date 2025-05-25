@@ -22,8 +22,6 @@ const Header: React.FC = () => {
           <button className="logout-button" onClick={handleLogout}>
             Cerrar sesión
           </button>
-
-          <div className="vertical-separator" />
         </div>
     </div>
   );
