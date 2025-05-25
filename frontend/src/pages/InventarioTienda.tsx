@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { inventoryApi, storeApi } from "../api/axios";
 import "../styles/inventarioTienda.css";
 import defaultStoreImage from "../assets/FotoPredeterminadaTienda.png";
+import defaultInventoryImage from "../assets/FotoPredeterminadaInventario.png";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { addItem, setItemQuantity, removeItem } from "../store/carritoTienda";
@@ -15,7 +16,9 @@ interface InventoryItem {
   description?: string;
   price: number;
   quantity: number;
+  image?: string; 
 }
+
 
 
 interface Owner {
@@ -139,6 +142,12 @@ const InventarioTienda: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
             >
+              <img
+                src={item.image || defaultInventoryImage}
+                alt={item.name}
+                className="inventory-image"
+              />
+
               <h3>{item.name}</h3>
               <p>{item.description}</p>
               <p><strong>${item.price.toFixed(2)}</strong></p>

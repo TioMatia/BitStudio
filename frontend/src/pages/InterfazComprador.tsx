@@ -68,10 +68,10 @@ return (
               className="store-card"
               onClick={() => navigate(`/shop/${store.id}`)}
               >
-              <img
+            <img
               src={store.image || defaultStoreImage}
               alt={store.name}
-              />
+            />
               <div className="info">
                 <h3>{store.name}</h3>
                 <div className="meta">

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Inventory {
@@ -18,7 +18,10 @@ price: number;
 quantity: number;
 
 @Column()
-storeId: number; 
+storeId: number;
+
+@Column({ nullable: true })
+image: string; 
 
 @CreateDateColumn()
 createdAt: Date;

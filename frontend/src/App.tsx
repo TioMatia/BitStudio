@@ -7,10 +7,14 @@ import InventarioTienda from './pages/InventarioTienda';
 import PrivateRouteComprador from "./Restricciones/PrivateRouteComprador";
 import NotFound from './pages/NotFound';
 import CarritoPage from "./pages/CarritoPage";
-import ShopLayout from './layouts/ShopLayout';
 import ForbiddenPage from "./pages/Forbidden";
 import CrearTiendaPage from "./pages/CrearTiendaPage";
 import MyStorePage from './pages/MyStorePage';
+import PrivateRouteLocatario from './Restricciones/PrivateRouteLocatario';
+
+import ShopLayout from './layouts/ShopLayout';
+import SellerLayout from './layouts/SellerLayout';
+
 function App() {
 
   return (
@@ -19,8 +23,8 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forbidden" element={<ForbiddenPage />} />
-      <Route path="/seller/crear-tienda" element={<CrearTiendaPage />} />
-      <Route path="/seller/mystore" element={<MyStorePage />} />
+      
+
         {/* Rutas protegidas solo para comprador */}
       <Route element={<PrivateRouteComprador />}>
         <Route element={<ShopLayout />}>
@@ -32,6 +36,13 @@ function App() {
         </Route>
       </Route>
 
+      <Route element={<PrivateRouteLocatario />}>
+          <Route element={<SellerLayout />}>
+            <Route path="/seller/crear-tienda" element={<CrearTiendaPage />} />
+            <Route path="/seller/mystore" element={<MyStorePage />} />
+          </Route>
+      </Route>
+      
       <Route path="*" element={<NotFound />} />
     </Routes>
 
