@@ -19,6 +19,14 @@ const Header: React.FC = () => {
     <div className="header-container">
       <div className="header-title">BITSTUDIO</div>
         <div className="header-actions">
+
+          <button className="provider-button" onClick={() => navigate("/admin/proveedores")}>
+              Historial Ventas
+            </button>
+          <button className="provider-button" onClick={() => navigate("/admin/proveedores")}>
+              Administrar Proveedores
+            </button>
+        <div className="vertical-separator" />
           <button className="logout-button" onClick={handleLogout}>
             Cerrar sesión
           </button>

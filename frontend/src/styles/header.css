@@ -100,3 +100,20 @@ border-color: #f44336;
   background-color: #ccc;
   margin: 0 1rem;
 }
+
+.provider-button {
+background-color: transparent;
+border: 1px solid #aaa;
+padding: 0.4rem 0.8rem;
+border-radius: 4px;
+cursor: pointer;
+font-size: 0.9rem;
+color: #ffffff;
+transition: background-color 0.3s ease;
+}
+
+.provider-button:hover {
+background-color: #3678f4;
+color: white;
+border-color: #3678f4;
+}

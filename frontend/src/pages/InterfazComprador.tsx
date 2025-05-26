@@ -75,7 +75,9 @@ return (
               <div className="info">
                 <h3>{store.name}</h3>
                 <div className="meta">
-                  <span>{store.estimatedTime}</span>
+                  {store.estimatedTime && (
+                  <p><strong>Tiempo estimado:</strong> {store.estimatedTime} minutos</p>
+                  )}
                   <span>⭐ {store.rating}</span>
                   <span>${store.deliveryFee?.toFixed(2)} envío</span>
                 </div>
