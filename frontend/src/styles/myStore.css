@@ -274,3 +274,18 @@ border: none;
 border-radius: 6px;
 cursor: pointer;
 }
+
+.connect-mp-button {
+background-color: #009ee3;
+color: white;
+padding: 0.6rem 1.2rem;
+font-weight: bold;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+margin-bottom: 1rem;
+}
+
+.connect-mp-button:hover {
+background-color: #007bb6;
+}

@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
+import { User } from './entities/user.entity';
 import { OrderModule } from './order/order.module';
-import { PaymentService } from './payment/payment.service';
-import { PaymentController } from './payment/payment.controller';
 import { PaymentModule } from './payment/payment.module';
+
 
 @Module({
   imports: [
@@ -17,13 +17,11 @@ import { PaymentModule } from './payment/payment.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Order],
+      entities: [Order, User],
       synchronize: true,
     }),
     OrderModule,
-    PaymentModule,
+    PaymentModule
   ],
-  providers: [PaymentService],
-  controllers: [PaymentController],
 })
 export class AppModule {}

@@ -19,4 +19,13 @@ export class User {
 
   @Column({ default: 'comprador' }) 
   role: string;
+
+  @Column({ nullable: true })
+  mpAccessToken?: string;
+
+  @Column({ nullable: true })
+  mpUserId?: string;
+  
 }
+
+
