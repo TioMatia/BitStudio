@@ -113,13 +113,9 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: order_db
       MP_ACCESS_TOKEN: APP_USR-3932883698958169-052520-7185a191ba952a5448f5cd191c59f7d3-360894875
-      SUCCESS_URL:  https://6023-181-42-221-199.ngrok-free.app/success
-      FAILURE_URL:  https://6023-181-42-221-199.ngrok-free.app/failure
-      PENDING_URL:  https://6023-181-42-221-199.ngrok-free.app/pending
-
-      MP_CLIENT_ID: 3932883698958169
-      MP_CLIENT_SECRET: fduEo85C6I5xG6DMcgaWEeT5PhIj5rzu
-      MP_REDIRECT_URI:  https://6023-181-42-221-199.ngrok-free.app/payment/mercadopago/oauth/callback
+      SUCCESS_URL: https://1575-181-42-253-158.ngrok-free.app/success
+      FAILURE_URL: https://1575-181-42-253-158.ngrok-free.app/failure
+      PENDING_URL: https://1575-181-42-253-158.ngrok-free.app/pending
       
   # 🌐 GATEWAY
   gateway:
