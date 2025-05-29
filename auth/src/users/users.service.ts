@@ -39,5 +39,11 @@ export class UsersService {
   return this.userRepo.findOne({ where: { id } });
   }
     
+  async connectMercadoPago(userId: number, accessToken: string, mpUserId: string) {
+  return this.userRepo.update(userId, {
+    mpAccessToken: accessToken,
+    mpUserId: mpUserId,
+  });
+}
 
 }

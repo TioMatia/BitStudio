@@ -45,8 +45,16 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       description: form.description,
       price: parseFloat(form.price),
       quantity: parseInt(form.quantity),
-      image: imageUrl,
       storeId,
+      ...(imageUrl.trim() !== "" && { image: imageUrl }),
+    });
+    
+    setForm({
+      name: "",
+      description: "",
+      price: "",
+      quantity: "",
+      image: null,
     });
 
     onProductAdded();

@@ -11,6 +11,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/payment': {
+        target: 'http://order:3000', 
+        changeOrigin: true,
+      }
     },
   },
 });

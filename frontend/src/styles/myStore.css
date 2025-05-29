@@ -274,3 +274,13 @@ border: none;
 border-radius: 6px;
 cursor: pointer;
 }
+
+.connect-mp-button.linked {
+  background-color: #4caf50;
+  color: white;
+  cursor: default;
+}
+.connect-mp-button:disabled {
+  opacity: 0.6;
+  
+}

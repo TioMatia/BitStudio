@@ -43,6 +43,7 @@ constructor(
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
+    mpAccessToken: user.mpAccessToken
   },
 };
 } catch (err) {
@@ -67,6 +68,7 @@ owner: null,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
+                    mpAccessToken: user.mpAccessToken,
                 },
                     };
         } catch (err) {
