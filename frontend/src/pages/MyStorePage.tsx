@@ -38,7 +38,7 @@ image?: string;
 }
 
 const MP_CLIENT_ID = "3932883698958169"
-const REDIRECT_URI = "https://d89c-186-11-115-49.ngrok-free.app/payment/mercadopago/oauth/callback";
+const REDIRECT_URI = "https://cad9-181-43-58-9.ngrok-free.app/payment/mercadopago/oauth/callback";
 
 const MyStorePage: React.FC = () => {
 const [store, setStore] = useState<Store | null>(null);

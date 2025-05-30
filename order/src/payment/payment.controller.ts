@@ -1,5 +1,6 @@
-import { Controller, Post, Body, Get, Query, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, BadRequestException, Res } from '@nestjs/common';
 import { PaymentService } from './payment.service';
+import { Response } from 'express';
 
 @Controller('payment')
 export class PaymentController {
@@ -30,4 +31,20 @@ async handleMPCallback(
 async createPreference(@Body() body: any) {
 return this.paymentService.createPreference(body);
 }
+
+@Get('/success')
+  success(@Res() res: Response) {
+    res.send('✅ Pago exitoso. ¡Gracias por tu compra!');
+  }
+
+  @Get('/failure')
+  failure(@Res() res: Response) {
+    res.send('❌ Hubo un problema con el pago. Intenta nuevamente.');
+  }
+
+  @Get('/pending')
+  pending(@Res() res: Response) {
+    res.send('🕒 Pago en proceso. Espera la confirmación.');
+  }
+
 }

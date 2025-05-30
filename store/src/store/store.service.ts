@@ -38,21 +38,21 @@ constructor(
     );
     const user = response.data;
     return {
-  ...store,
-  owner: {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    mpAccessToken: user.mpAccessToken
-  },
-};
-} catch (err) {
-console.error('Error fetching user info:', err.message);
-return {
-...store,
-owner: null,
-};
-}
+        ...store,
+        owner: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            mpAccessToken: user.mpAccessToken
+        },
+    };
+        } catch (err) {
+        console.error('Error fetching user info:', err.message);
+        return {
+        ...store,
+        owner: null,
+        };
+        }
 }
 
     async findByUserId(userId: number): Promise<any> {
