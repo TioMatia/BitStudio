@@ -2,21 +2,36 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 
 @Entity()
 export class Order {
-  @PrimaryGeneratedColumn()
-  id: number;
+@PrimaryGeneratedColumn()
+id: number;
 
-  @Column()
-  customerName: string;
+@Column()
+storeName: string;
 
-  @Column()
-  address: string;
+@Column()
+storeId: number;
 
-  @Column('decimal')
-  total: number;
+@Column()
+storeAddress: string;
 
-  @Column({ default: 'pending' })
-  status: string;
+@Column()
+userAddress: string; 
 
-  @CreateDateColumn()
-  createdAt: Date;
+@Column('json')
+items: { name: string; price: number; quantity: number }[];
+
+@Column('decimal', { precision: 10, scale: 2 })
+total: number;
+
+@Column()
+status: string;
+
+@CreateDateColumn()
+createdAt: Date;
+
+@Column()
+deliveryMethod: 'delivery' | 'pickup';
+
+@Column({ nullable: true })
+deliveryName?: string;
 }

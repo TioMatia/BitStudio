@@ -15,12 +15,16 @@ services:
       - postgres_auth_data:/var/lib/postgresql/data
 
   auth:
-    build: ./auth
+    build:
+      context: ./auth
     container_name: auth_service
     ports:
       - "3001:3000"
     depends_on:
       - postgres_auth
+    volumes:
+      - ./auth:/app
+      - /app/node_modules
     environment:
       DB_HOST: postgres_auth
       DB_PORT: 5432
@@ -42,12 +46,16 @@ services:
       - postgres_store_data:/var/lib/postgresql/data
 
   store:
-    build: ./store
+    build:
+      context: ./store
     container_name: store_service
     ports:
       - "3002:3000"
     depends_on:
       - postgres_store
+    volumes:
+      - ./store:/app
+      - /app/node_modules
     environment:
       DB_HOST: postgres_store
       DB_PORT: 5432
@@ -56,8 +64,8 @@ services:
       DB_NAME: store_db
       USER_SERVICE_URL: http://auth:3000
       CLOUDINARY_NAME: dffrle1y3
-      CLAODINARY_KEY: 129683113734629
-      CLAODINARY_SECRET: MFoMn0AOBnE2a4tUaGeczhzC9h8
+      CLAUDINARY_KEY: 129683113734629
+      CLAUDINARY_SECRET: MFoMn0AOBnE2a4tUaGeczhzC9h8
 
   # INVENTORY SERVICE
   postgres_inventory:
@@ -73,12 +81,16 @@ services:
       - postgres_inventory_data:/var/lib/postgresql/data
 
   inventory:
-    build: ./inventory
+    build:
+      context: ./inventory
     container_name: inventory_service
     ports:
       - "3003:3000"
     depends_on:
       - postgres_inventory
+    volumes:
+      - ./inventory:/app
+      - /app/node_modules
     environment:
       DB_HOST: postgres_inventory
       DB_PORT: 5432
@@ -100,12 +112,16 @@ services:
       - postgres_order_data:/var/lib/postgresql/data
 
   order:
-    build: ./order
+    build:
+      context: ./order
     container_name: order_service
     ports:
       - "3004:3000"
     depends_on:
       - postgres_order
+    volumes:
+      - ./order:/app
+      - /app/node_modules
     environment:
       DB_HOST: postgres_order
       DB_PORT: 5432
@@ -120,21 +136,6 @@ services:
       FAILURE_URL: https://cad9-181-43-58-9.ngrok-free.app/failure
       PENDING_URL: https://cad9-181-43-58-9.ngrok-free.app/pending
       AUTH_SERVICE_URL: http://auth:3000
-  # 🌐 GATEWAY
-  gateway:
-    build: ./gateway
-    container_name: api_gateway
-    ports:
-      - "3000:3000"
-    depends_on:
-      - auth
-      - store
-      - inventory
-      - order
-    environment:
-      # Puedes configurar variables si deseas conectar desde gateway
-      AUTH_SERVICE_URL: http://auth:3000
-      STORE_SERVICE_URL: http://store:3000
 
   # FRONTEND
   frontend:
@@ -142,8 +143,6 @@ services:
     container_name: react_frontend
     ports:
       - "5173:5173"
-    depends_on:
-      - gateway
     working_dir: /app
     volumes:
       - ./frontend:/app

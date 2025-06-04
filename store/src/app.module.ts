@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Store } from './entities/store.entity';
 import { StoreModule } from './store/store.module';
-
+import { ProvidersModule } from './provider/providers.module';
+import { Provider } from "./entities/provider.entity";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -14,10 +15,11 @@ import { StoreModule } from './store/store.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Store],
+      entities: [Store,Provider],
       synchronize: true,
     }),
     StoreModule,
+    ProvidersModule,
   ],
 })
 export class AppModule {}

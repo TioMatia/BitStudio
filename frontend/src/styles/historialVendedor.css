@@ -1,0 +1,90 @@
+.historial-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #f9fafb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.historial-container h2 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #1f2937;
+}
+
+.order-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.order-details {
+  max-width: 70%;
+}
+
+.order-details p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+}
+
+.order-details p strong {
+  color: #2563eb; /* azul vibrante */
+}
+
+.order-items {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.75rem;
+}
+
+.order-items li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.order-status {
+  min-width: 110px;
+  background-color: #e0e7ff; /* fondo azul claro */
+  color: #3730a3; /* texto azul oscuro */
+  font-weight: 600;
+  text-transform: capitalize;
+  border-radius: 9999px; /* pill */
+  padding: 0.5rem 1rem;
+  text-align: center;
+  align-self: center;
+  box-shadow: 0 2px 8px rgba(55, 48, 163, 0.3);
+  user-select: none;
+}
+
+@media (max-width: 720px) {
+  .order-card {
+    flex-direction: column;
+  }
+
+  .order-details {
+    max-width: 100%;
+  }
+
+  .order-status {
+    margin-top: 1rem;
+    align-self: flex-start;
+  }
+}

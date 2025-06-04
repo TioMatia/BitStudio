@@ -17,13 +17,13 @@ return this.storeService.create(dto);
 findAll() {
 return this.storeService.findAll();
 }
-@Get(':id')
-getStoreById(@Param('id') id: number) {
-return this.storeService.findOne(id);
-}
-
 @Get('user/:userId')
 getStoreByUserId(@Param('userId') userId: number) {
-return this.storeService.findByUserId(userId);
+  return this.storeService.findByUserId(userId);
+}
+
+@Get(':id')
+getStoreById(@Param('id') id: number) {
+  return this.storeService.findOne(id);
 }
 }

@@ -5,7 +5,6 @@ import { Order } from './entities/order.entity';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
 import { User } from './entities/user.entity';
-import { MpCredential } from './entities/mp-credential.entity';
 
 @Module({
   imports: [

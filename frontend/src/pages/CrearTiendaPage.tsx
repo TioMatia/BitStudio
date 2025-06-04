@@ -76,43 +76,43 @@ const CrearTiendaPage: React.FC = () => {
 
   return (
 <div className="create-store-page">
-<div className="create-card">
-<h2>Crear Tienda</h2>
-<form onSubmit={handleSubmit} className="create-form">
-<div className="field">
-<span>Nombre de la tienda</span>
-<input name="name" value={form.name} onChange={handleChange} required />
-</div>
-<div className="field">
-<span>Ubicación</span>
-<input name="location" value={form.location} onChange={handleChange} required />
-</div>
-<div className="field">
-<span>Teléfono (opcional)</span>
-<input name="phone" value={form.phone} onChange={handleChange} />
-</div>
-<div className="field">
-<span>Descripción (opcional)</span>
-<input name="description" value={form.description} onChange={handleChange} />
-</div>
-<div className="field">
-<span>Imagen de la tienda (opcional)</span>
-<input type="file" accept="image/*" onChange={handleImageChange} />
-</div>
-<div className="field">
-<span>Costo de envío (opcional)</span>
-<input type="number" name="deliveryFee" min="0" step="0.01" value={form.deliveryFee} onChange={handleChange} />
-</div>
-<div className="field">
-<span>Tiempo estimado en minutos (opcional)</span>
-<input name="estimatedTime" value={form.estimatedTime} onChange={handleChange} />
-</div>
-<button type="submit" className="button button-primary">
-<FaStore className="icon" />
-Crear tienda
-</button>
-</form>
-</div>
+  <div className="create-card">
+    <h2>Crear Tienda</h2>
+    <form onSubmit={handleSubmit} className="create-form">
+      <div className="field">
+        <span>Nombre de la tienda</span>
+        <input name="name" value={form.name} onChange={handleChange} required />
+      </div>
+      <div className="field">
+        <span>Ubicación</span>
+        <input name="location" value={form.location} onChange={handleChange} required />
+      </div>
+      <div className="field">
+        <span>Teléfono (opcional)</span>
+        <input name="phone" value={form.phone} onChange={handleChange} />
+      </div>
+      <div className="field">
+        <span>Descripción (opcional)</span>
+        <input name="description" value={form.description} onChange={handleChange} />
+      </div>
+      <div className="field">
+        <span>Imagen de la tienda (opcional)</span>
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+      </div>
+      <div className="field">
+        <span>Costo de envío (opcional)</span>
+        <input type="number" name="deliveryFee" min="0" step="0.01" value={form.deliveryFee} onChange={handleChange} />
+      </div>
+      <div className="field">
+        <span>Tiempo estimado en minutos (opcional)</span>
+        <input name="estimatedTime" value={form.estimatedTime} onChange={handleChange} />
+      </div>
+      <button type="submit" className="button button-primary">
+        <FaStore className="icon" />
+        Crear tienda
+      </button>
+    </form>
+  </div>
 </div>
 );
 

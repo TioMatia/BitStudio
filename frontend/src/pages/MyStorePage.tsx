@@ -53,19 +53,23 @@ const isMPLinked = !!store?.owner?.mpAccessToken;
 
 
 const fetchStoreAndInventory = async () => {
-try {
-const res = await storeApi.get(`/stores/user/${userId}`);
-console.log("📦 Tienda:", res.data);
-setStore(res.data);
-const invRes = await inventoryApi.get(`/inventory/store/${res.data.id}`);
-setItems(invRes.data);
-} catch (err) {
-console.error("❌ Error al cargar datos de la tienda:", err);
-}
+  try {
+    const res = await storeApi.get(`/stores/user/${userId}`);
+    console.log("📦 Tienda:", res.data);
+    setStore(res.data);
+
+    // 🟩 Guardar el storeId en localStorage
+    localStorage.setItem("storeId", res.data.id.toString());
+
+    const invRes = await inventoryApi.get(`/inventory/store/${res.data.id}`);
+    setItems(invRes.data);
+  } catch (err) {
+    console.error("❌ Error al cargar datos de la tienda:", err);
+  }
 };
 
 useEffect(() => {
-fetchStoreAndInventory();
+  fetchStoreAndInventory();
 }, [userId]);
 
 const handleDelete = async (item: InventoryItem) => {

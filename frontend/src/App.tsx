@@ -14,6 +14,8 @@ import PrivateRouteLocatario from './Restricciones/PrivateRouteLocatario';
 
 import ShopLayout from './layouts/ShopLayout';
 import SellerLayout from './layouts/SellerLayout';
+import HistorialVendedor from './pages/HistorialVendedor';
+import Proveedores from './pages/Proveedores';
 
 function App() {
 
@@ -40,6 +42,8 @@ function App() {
           <Route element={<SellerLayout />}>
             <Route path="/seller/crear-tienda" element={<CrearTiendaPage />} />
             <Route path="/seller/mystore" element={<MyStorePage />} />
+            <Route path= "/seller/historial" element ={<HistorialVendedor />} />
+            <Route path= "/seller/proveedores" element ={<Proveedores />} />
           </Route>
       </Route>
       

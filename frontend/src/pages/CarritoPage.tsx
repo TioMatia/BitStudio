@@ -51,12 +51,12 @@ const CarritoPage: React.FC = () => {
 
         const response = await axios.post("http://localhost:3004/payment/create", {
           items,
-          sellerId: storeData?.userId, // <- asegúrate de tener este campo en storeData
+          sellerId: storeData?.userId, 
       });
 
         const { init_point } = response.data;
 
-        window.location.href = init_point; // Redirige a Mercado Pago
+        window.location.href = init_point; 
     } catch (err) {
         console.error("❌ Error al crear preferencia de pago:", err);
         alert("Ocurrió un error al intentar iniciar el pago.");
