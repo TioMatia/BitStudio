@@ -80,13 +80,13 @@ const HistorialVendedor = () => {
               <ul className="order-items">
                 {order.items.map((item) => (
                   <li key={item.id}>
-                    - {item.name} {item.quantity} - {formatCurrency(item.price)}
+                    - Producto: {item.name} - Cantidad: {item.quantity} - {formatCurrency(item.price)}
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Aquí agrupamos estado y botón */}
+           
             <div className="order-actions">
               <div className="order-status">
                 {order.status}

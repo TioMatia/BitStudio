@@ -3,6 +3,13 @@ import { InventoryService } from './inventory.service';
 import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { UpdateQuantityDto } from './dto/update-quantity.dto';
 
+interface UpdateStockDto {
+  items: {
+    inventoryId: number;
+    quantity: number;
+  }[];
+}
+
 @Controller('inventory')
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
@@ -22,10 +29,17 @@ export class InventoryController {
     return this.inventoryService.findOne(id);
   }
 
-    @Patch(':id')
-    update(@Param('id') id: number, @Body() body: Partial<CreateInventoryDto>) {
-    return this.inventoryService.update(id, body);
-    }
+  @Patch('decrease-stock')
+  async decreaseStock(@Body() dto: UpdateStockDto) {
+  return this.inventoryService.decreaseStock(dto.items);
+  }
+  
+  @Patch(':id')
+  update(@Param('id') id: number, @Body() body: Partial<CreateInventoryDto>) {
+  return this.inventoryService.update(id, body);
+  }
+
+  
 
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number) {

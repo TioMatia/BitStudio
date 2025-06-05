@@ -40,4 +40,18 @@ async update(id: number, changes: Partial<CreateInventoryDto>) {
       throw new NotFoundException('Producto no encontrado');
     }
   }
+
+  async decreaseStock(items: { inventoryId: number; quantity: number }[]) {
+    for (const item of items) {
+      const inventory = await this.inventoryRepo.findOneBy({ id: item.inventoryId });
+      if (!inventory) throw new Error(`Producto ${item.inventoryId} no encontrado`);
+
+      if (inventory.quantity < item.quantity)
+        throw new Error(`Stock insuficiente para producto ${inventory.id}`);
+
+      inventory.quantity -= item.quantity;
+      await this.inventoryRepo.save(inventory);
+    }
+    return { message: 'Stock actualizado correctamente' };
+  }
 }

@@ -1,24 +1,50 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from '../entities/order.entity';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { randomBytes } from 'crypto';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class OrderService {
     constructor(
+        private readonly httpService: HttpService,
         @InjectRepository(Order)
         private readonly orderRepository: Repository<Order>,
     ) {}
 
     async createOrder(dto: CreateOrderDto): Promise<Order> {
+        // 1. Preparar items para actualizar stock
+        // Asumo que dto.items tiene algo así:
+        // [{ inventoryId: number, quantity: number, ... }, ...]
+        const stockItems = dto.items.map(item => ({
+            inventoryId: item.inventoryId,
+            quantity: item.quantity,
+        }));
+
+        // 2. Llamar al microservicio inventory para decrementar stock
+        try {
+            await firstValueFrom(
+                this.httpService.patch(
+                    'http://inventory_service:3000/inventory/decrease-stock',
+                    { items: stockItems }
+                )
+            );
+        } catch (error) {
+            throw new InternalServerErrorException('No se pudo actualizar el stock: ' + error.message);
+        }
+
+        // 3. Crear la orden solo si la actualización del stock fue exitosa
         const order = this.orderRepository.create({
-        ...dto,
-        orderNumber: this.generateOrderNumber(),
+            ...dto,
+            orderNumber: this.generateOrderNumber(),
         });
+
         await this.orderRepository.save(order);
-        return this.orderRepository.save(order);
+
+        return order;
     }
 
     async findByStore(storeId: number) {
