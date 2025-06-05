@@ -11,11 +11,12 @@ interface OrderItem {
 
 interface Order {
   id: number;
-  buyerName: string;
+  userName: string;
   createdAt: string;
-  total: number | string; // puede venir como string desde el backend
+  total: number | string; 
   status: string;
   items: OrderItem[];
+  orderNumber: string
 }
 
 const HistorialVendedor = () => {
@@ -49,8 +50,8 @@ const HistorialVendedor = () => {
         orders.map((order) => (
           <div key={order.id} className="order-card">
             <div className="order-details">
-              <p><strong>Número de orden:</strong> {order.id}</p>
-              <p><strong>Comprador:</strong> {order.buyerName}</p>
+              <p><strong>Número de orden:</strong> {order.orderNumber}</p>
+              <p><strong>Comprador:</strong> {order.userName}</p>
               <p><strong>Fecha:</strong> {new Date(order.createdAt).toLocaleString()}</p>
               <p><strong>Total:</strong> {formatCurrency(order.total)}</p>
               <ul className="order-items">

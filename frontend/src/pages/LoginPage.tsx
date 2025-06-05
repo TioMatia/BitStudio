@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authApi, storeApi } from "../api/axios";
 import { loadCart } from "../store/carritoTienda";
+import { setCredentials } from "../store/auth"; // 👈 importante
 import "../styles/login.css";
 
 const LoginPage: React.FC = () => {
@@ -22,10 +23,13 @@ const LoginPage: React.FC = () => {
       localStorage.setItem("role", user.role);
       localStorage.setItem("userId", user.id);
 
-  
+    
+      dispatch(setCredentials({ user, token: access_token }));
+
+   
       dispatch(loadCart());
 
-  
+    
       switch (user.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -34,8 +38,8 @@ const LoginPage: React.FC = () => {
           const storeRes = await storeApi.get(`/stores/user/${user.id}`);
           if (storeRes.data && storeRes.data.id) {
             navigate("/seller/mystore");
-          }else{
-            navigate("/seller/crear-tienda")
+          } else {
+            navigate("/seller/crear-tienda");
           }
           break;
         case "comprador":
@@ -47,10 +51,11 @@ const LoginPage: React.FC = () => {
         default:
           navigate("/login");
       }
-      setMessage("✅ Login exitoso");
+
+      setMessage("Login exitoso");
     } catch (err: any) {
-      console.error("❌ Error:", err);
-      setMessage("❌ Credenciales inválidas");
+      console.error("Error:", err);
+      setMessage("Credenciales inválidas");
     }
   };
 

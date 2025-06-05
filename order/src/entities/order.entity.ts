@@ -5,6 +5,9 @@ export class Order {
 @PrimaryGeneratedColumn()
 id: number;
 
+@Column({ unique: true })
+orderNumber: string;
+
 @Column()
 storeName: string;
 
@@ -16,6 +19,9 @@ storeAddress: string;
 
 @Column()
 userAddress: string; 
+
+@Column()
+userName: string
 
 @Column('json')
 items: { name: string; price: number; quantity: number }[];
@@ -31,7 +37,4 @@ createdAt: Date;
 
 @Column()
 deliveryMethod: 'delivery' | 'pickup';
-
-@Column({ nullable: true })
-deliveryName?: string;
 }

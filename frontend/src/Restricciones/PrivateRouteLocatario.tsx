@@ -1,6 +1,6 @@
 import React from "react";
 import {Outlet } from "react-router-dom";
-import Forbidden from "../pages/Forbidden";
+import Forbidden from "../pages/Control/Forbidden";
 
 const PrivateRouteLocatario: React.FC = () => {
   const token = localStorage.getItem("token");

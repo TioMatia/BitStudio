@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./carritoTienda";
+import authReducer from "./auth";
 
-// Cargar desde localStorage
 const loadCart = () => {
   try {
     const saved = localStorage.getItem("cart");
@@ -15,13 +15,13 @@ const loadCart = () => {
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
+    auth: authReducer,
   },
   preloadedState: {
     cart: loadCart(),
   },
 });
 
-// Guardar automáticamente en localStorage cuando cambia el carrito
 store.subscribe(() => {
   try {
     const state = store.getState();
