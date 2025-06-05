@@ -156,7 +156,7 @@
   font-size: 1rem;
 }
 
-.order-button {
+.orden-button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -167,6 +167,6 @@
   transition: background-color 0.3s ease;
 }
 
-.order-button:hover {
+.orden-button:hover {
   background-color: #0056b3;
 }

@@ -16,7 +16,8 @@ interface Order {
   total: number | string; 
   status: string;
   items: OrderItem[];
-  orderNumber: string
+  orderNumber: string;
+  deliveryMethod: "pickup" | "delivery";
 }
 
 const HistorialVendedor = () => {
@@ -41,6 +42,28 @@ const HistorialVendedor = () => {
     }).format(numberValue);
   };
 
+  const handleStatusToggle = async (order: Order) => {
+    const isPending = order.status === "pendiente";
+
+    const newStatus =
+      isPending
+        ? (order.deliveryMethod === "pickup"
+            ? "Disponible para retiro"
+            : "Disponible para delivery")
+        : "pendiente";
+
+    try {
+      const res = await orderApi.patch(`/orders/${order.id}/status`, { status: newStatus });
+
+      setOrders((prev) =>
+        prev.map((o) => (o.id === order.id ? { ...o, status: res.data.status } : o))
+      );
+    } catch (err) {
+      console.error("Error al cambiar el estado:", err);
+      alert("❌ No se pudo actualizar el estado.");
+    }
+  };
+
   return (
     <div className="historial-container">
       <h2>Historial de Ventas</h2>
@@ -57,12 +80,29 @@ const HistorialVendedor = () => {
               <ul className="order-items">
                 {order.items.map((item) => (
                   <li key={item.id}>
-                    - {item.name}  {item.quantity} - {formatCurrency(item.price)}
+                    - {item.name} {item.quantity} - {formatCurrency(item.price)}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="order-status">{order.status}</div>
+
+            {/* Aquí agrupamos estado y botón */}
+            <div className="order-actions">
+              <div className="order-status">
+                {order.status}
+              </div>
+
+              <button
+                className="status-btn"
+                onClick={() => handleStatusToggle(order)}
+              >
+                {order.status === "pendiente"
+                  ? order.deliveryMethod === "pickup"
+                    ? "Marcar como listo para retiro"
+                    : "Marcar como listo para delivery"
+                  : "Revertir a pendiente"}
+              </button>
+            </div>
           </div>
         ))
       )}

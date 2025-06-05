@@ -192,7 +192,7 @@ const handleCrearOrden = async () => {
 
             
             <div className="buttons">
-              <button className="order-button" onClick={handleCrearOrden}>
+              <button className="orden-button" onClick={handleCrearOrden}>
                 Hacer orden
               </button>
               <button className="pay-button" onClick={handlePago}>

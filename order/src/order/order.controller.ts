@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 
@@ -19,4 +19,13 @@ export class OrderController {
             order,
         };
     }
+    
+    @Patch(':id/status')
+        async updateStatus(
+        @Param('id') id: number,
+        @Body('status') status: string,
+        ) {
+        return this.orderService.updateStatus(id, status);
+        }
+
 }

@@ -1,10 +1,14 @@
+export class OrderItemDto {
+  inventoryId: number;
+  quantity: number;
+}
+
 export class CreateOrderDto {
 storeName: string;
 storeAddress: string;
 userAddress: string;
-items: { name: string; price: number; quantity: number }[];
+items: OrderItemDto[];
 total: number;
 status: string;
 deliveryMethod: 'delivery' | 'pickup';
-
 }
