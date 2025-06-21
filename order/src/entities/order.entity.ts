@@ -21,6 +21,9 @@ storeAddress: string;
 userAddress: string; 
 
 @Column()
+userId: string;
+
+@Column()
 userName: string
 
 @Column('json')

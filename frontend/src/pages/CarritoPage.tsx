@@ -106,10 +106,10 @@ const handleCrearOrden = async () => {
     };
 
     const res = await orderApi.post("/orders", dto);
-    alert(`✅ Orden creada exitosamente\nNúmero de orden: ${res.data.orderNumber}`);
+    alert(`Orden creada exitosamente\nNúmero de orden: ${res.data.order.orderNumber}`);
     dispatch(clearCart());
   } catch (err) {
-    console.error("❌ Error al crear orden:", err);
+    console.error("Error al crear orden:", err);
     alert("Ocurrió un error al crear la orden.");
   }
 };

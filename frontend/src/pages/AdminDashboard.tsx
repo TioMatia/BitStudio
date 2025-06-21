@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
+  BarChart, Bar, XAxis, YAxis, Tooltip,
+  ResponsiveContainer, CartesianGrid,
 } from "recharts";
 import { orderApi, storeApi } from "../api/axios";
-import Papa from "papaparse";
 import { saveAs } from "file-saver";
+import * as XLSX from "xlsx";
+import "../styles/AdminDashboard.css";
 
 interface Order {
   id: number;
@@ -19,6 +15,7 @@ interface Order {
   total: string | number;
   status: string;
   createdAt: string;
+  userName: string;
 }
 
 interface Store {
@@ -31,10 +28,7 @@ const AdminDashboard = () => {
   const [stores, setStores] = useState<Store[]>([]);
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
-    start: "",
-    end: "",
-  });
+  const [dateRange, setDateRange] = useState({ start: "", end: "" });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,130 +45,110 @@ const AdminDashboard = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
   const filteredOrders = orders.filter((o) => {
-    const isStoreMatch =
-      selectedStoreId === null || o.storeId === selectedStoreId;
+    const isStoreMatch = selectedStoreId === null || o.storeId === selectedStoreId;
     const isDateMatch =
       (!dateRange.start || new Date(o.createdAt) >= new Date(dateRange.start)) &&
       (!dateRange.end || new Date(o.createdAt) <= new Date(dateRange.end));
     return isStoreMatch && isDateMatch;
   });
 
-  const ordersByStore = selectedStoreId
-    ? [
-        {
-          name: stores.find((s) => s.id === selectedStoreId)?.name || "Tienda",
-          ventas: filteredOrders.reduce((sum, o) => sum + Number(o.total), 0),
-        },
-      ]
-    : stores.map((store) => {
-        const storeOrders = filteredOrders.filter((o) => o.storeId === store.id);
-        const totalSales = storeOrders.reduce(
-          (sum, o) => sum + Number(o.total),
-          0
-        );
-        return { name: store.name, ventas: totalSales };
-      });
-
   const resumen = {
     totalVentas: filteredOrders.reduce((sum, o) => sum + Number(o.total), 0),
     cantidadOrdenes: filteredOrders.length,
     promedio: filteredOrders.length
-      ? filteredOrders.reduce((sum, o) => sum + Number(o.total), 0) /
-        filteredOrders.length
+      ? filteredOrders.reduce((sum, o) => sum + Number(o.total), 0) / filteredOrders.length
       : 0,
   };
 
-  const exportCSV = () => {
-    const csv = Papa.unparse(
+  const ordersByStore = selectedStoreId
+    ? [{
+        name: stores.find((s) => s.id === selectedStoreId)?.name || "Tienda",
+        ventas: resumen.totalVentas,
+      }]
+    : stores.map((store) => {
+        const storeOrders = filteredOrders.filter((o) => o.storeId === store.id);
+        const totalSales = storeOrders.reduce((sum, o) => sum + Number(o.total), 0);
+        return { name: store.name, ventas: totalSales };
+      });
+
+  const resumenPorCliente = Object.values(
+    filteredOrders.reduce((acc: any, order) => {
+      if (!acc[order.userName]) {
+        acc[order.userName] = {
+          nombre: order.userName,
+          totalGastado: 0,
+          cantidadOrdenes: 0,
+        };
+      }
+      acc[order.userName].totalGastado += Number(order.total);
+      acc[order.userName].cantidadOrdenes += 1;
+      return acc;
+    }, {})
+  );
+
+  const exportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
       filteredOrders.map((o) => ({
         ID: o.id,
-        Tienda: stores.find((s) => s.id === o.storeId)?.name || "",
         Orden: o.orderNumber,
+        Tienda: stores.find((s) => s.id === o.storeId)?.name || "",
+        Cliente: o.userName,
         Total: o.total,
         Estado: o.status,
         Fecha: new Date(o.createdAt).toLocaleDateString(),
       }))
     );
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    saveAs(blob, "ordenes.csv");
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Órdenes");
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "ordenes.xlsx");
   };
 
-  if (loading) {
-    return <p className="text-center mt-10">Cargando estadísticas...</p>;
-  }
+  if (loading) return <p className="text-center mt-10">Cargando estadísticas...</p>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">
-        Panel de Estadísticas
-      </h1>
+    <div className="admin-dashboard">
+      <h1 className="admin-title">Panel de Estadísticas</h1>
 
-      {/* Filtros */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="admin-filters">
         <div>
-          <label className="block text-sm font-medium">Filtrar por tienda:</label>
+          <label>Filtrar por tienda:</label>
           <select
             value={selectedStoreId ?? ""}
-            onChange={(e) =>
-              setSelectedStoreId(e.target.value ? Number(e.target.value) : null)
-            }
-            className="w-full p-2 border rounded"
+            onChange={(e) => setSelectedStoreId(e.target.value ? Number(e.target.value) : null)}
           >
             <option value="">Todas las tiendas</option>
             {stores.map((store) => (
-              <option key={store.id} value={store.id}>
-                {store.name}
-              </option>
+              <option key={store.id} value={store.id}>{store.name}</option>
             ))}
           </select>
         </div>
-
         <div>
-          <label className="block text-sm font-medium">Desde:</label>
-          <input
-            type="date"
-            value={dateRange.start}
-            onChange={(e) =>
-              setDateRange((prev) => ({ ...prev, start: e.target.value }))
-            }
-            className="w-full p-2 border rounded"
-          />
+          <label>Desde:</label>
+          <input type="date" value={dateRange.start} onChange={(e) =>
+            setDateRange((prev) => ({ ...prev, start: e.target.value }))} />
         </div>
-
         <div>
-          <label className="block text-sm font-medium">Hasta:</label>
-          <input
-            type="date"
-            value={dateRange.end}
-            onChange={(e) =>
-              setDateRange((prev) => ({ ...prev, end: e.target.value }))
-            }
-            className="w-full p-2 border rounded"
-          />
+          <label>Hasta:</label>
+          <input type="date" value={dateRange.end} onChange={(e) =>
+            setDateRange((prev) => ({ ...prev, end: e.target.value }))} />
         </div>
       </div>
 
-      {/* Resumen */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-col md:flex-row gap-4">
-        <div>Total de ventas: <strong>${resumen.totalVentas.toFixed(2)}</strong></div>
-        <div>Cantidad de órdenes: <strong>{resumen.cantidadOrdenes}</strong></div>
-        <div>Promedio por orden: <strong>${resumen.promedio.toFixed(2)}</strong></div>
-        <button
-          className="ml-auto bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-          onClick={exportCSV}
-        >
-          Exportar CSV
-        </button>
+      <div className="admin-summary">
+        <div>Total ventas: <strong>${resumen.totalVentas.toFixed(2)}</strong></div>
+        <div>Órdenes: <strong>{resumen.cantidadOrdenes}</strong></div>
+        <div>Promedio: <strong>${resumen.promedio.toFixed(2)}</strong></div>
+        <button onClick={exportExcel}>Exportar Excel</button>
       </div>
 
-      {/* Gráfico */}
-      <div className="bg-white p-6 rounded-lg shadow mb-8">
-        <h2 className="text-lg font-semibold mb-4">Ventas</h2>
+      <div className="admin-chart">
+        <h2>Ventas por Tienda</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={ordersByStore}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -186,40 +160,59 @@ const AdminDashboard = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* Tabla */}
+      {/* Tabla de órdenes */}
       {filteredOrders.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4">Órdenes</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-200">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-4 py-2 border">Tienda</th>
-                  <th className="px-4 py-2 border">Orden</th>
-                  <th className="px-4 py-2 border">Total</th>
-                  <th className="px-4 py-2 border">Estado</th>
-                  <th className="px-4 py-2 border">Fecha</th>
+        <div className="admin-table">
+          <h2>Órdenes</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Tienda</th>
+                <th>Orden</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders.map((order) => (
+                <tr key={order.id}>
+                  <td>{stores.find((s) => s.id === order.storeId)?.name}</td>
+                  <td>{order.orderNumber}</td>
+                  <td>{order.userName}</td>
+                  <td>${order.total}</td>
+                  <td>{order.status}</td>
+                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredOrders.map((order) => (
-                  <tr key={order.id} className="text-center">
-                    <td className="px-4 py-2 border">
-                      {stores.find((s) => s.id === order.storeId)?.name || ""}
-                    </td>
-                    <td className="px-4 py-2 border">{order.orderNumber}</td>
-                    <td className="px-4 py-2 border">${order.total}</td>
-                    <td className="px-4 py-2 border">{order.status}</td>
-                    <td className="px-4 py-2 border">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
+
+      {/* Resumen por cliente */}
+      <div className="admin-table mt-6">
+        <h2>Resumen por Cliente</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Órdenes</th>
+              <th>Total Gastado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {resumenPorCliente.map((cliente: any) => (
+              <tr key={cliente.nombre}>
+                <td>{cliente.nombre}</td>
+                <td>{cliente.cantidadOrdenes}</td>
+                <td>${cliente.totalGastado.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
