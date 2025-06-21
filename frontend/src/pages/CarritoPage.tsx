@@ -44,26 +44,34 @@ const CarritoPage: React.FC = () => {
     dispatch(clearCart());
   };
 
-  const handlePago = async () => {
-    try {
-      const items = cart.items.map(item => ({
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity
-      }));
-
-      const response = await orderApi.post("/payment/create", {
-        items,
-        sellerId: storeData?.userId,
-      });
-
-      const { init_point } = response.data;
-      window.location.href = init_point;
-    } catch (err) {
-      console.error("❌ Error al crear preferencia de pago:", err);
-      alert("Ocurrió un error al intentar iniciar el pago.");
+const handlePago = async () => {
+  try {
+    if (!storeData) {
+      alert("No se encontró la tienda");
+      return;
     }
-  };
+
+  
+    const items = cart.items.map((item) => ({
+      id: item.id,         
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    }));
+
+    const payload = { items, sellerId: storeData.userId };
+
+    console.log("Payload a /payment/create:", payload);
+
+    const { data } = await orderApi.post("/payment/create", payload);
+
+    // Redirige a Mercado Pago
+    window.location.href = data.init_point;
+  } catch (error: any) {
+    console.error("Error al crear preferencia:", error.response?.data || error);
+    alert(error.response?.data?.message ?? "Error al iniciar el pago.");
+  }
+};
 
 const user = useSelector((state: RootState) => state.auth.user);
 

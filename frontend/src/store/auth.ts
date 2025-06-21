@@ -23,10 +23,10 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action: PayloadAction<{ user: User; token: string }>) => {
-        console.log("🔐 setCredentials payload:", action.payload); // 👈 debug
+        console.log(" setCredentials payload:", action.payload); 
       state.user = action.payload.user;
       state.token = action.payload.token;
-      console.log("✅ Nuevo estado de auth:", state); // 👈 debug
+      console.log(" Nuevo estado de auth:", state); 
     },
     clearAuth: (state) => {
       state.user = null;

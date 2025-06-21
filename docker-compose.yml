@@ -131,10 +131,10 @@ services:
       MP_ACCESS_TOKEN: APP_USR-3932883698958169-052520-7185a191ba952a5448f5cd191c59f7d3-360894875
       MP_CLIENT_ID: 3932883698958169
       MP_CLIENT_SECRET: fduEo85C6I5xG6DMcgaWEeT5PhIj5rzu
-      MP_REDIRECT_URI: https://cad9-181-43-58-9.ngrok-free.app/payment/mercadopago/oauth/callback
-      SUCCESS_URL: https://cad9-181-43-58-9.ngrok-free.app/success
-      FAILURE_URL: https://cad9-181-43-58-9.ngrok-free.app/failure
-      PENDING_URL: https://cad9-181-43-58-9.ngrok-free.app/pending
+      MP_REDIRECT_URI: https://aadc-186-9-144-62.ngrok-free.app/payment/mercadopago/oauth/callback
+      SUCCESS_URL: https://aadc-186-9-144-62.ngrok-free.app/success
+      FAILURE_URL: https://aadc-186-9-144-62.ngrok-free.app/failure
+      PENDING_URL: https://aadc-186-9-144-62.ngrok-free.app/pending
       AUTH_SERVICE_URL: http://auth:3000
 
   # FRONTEND

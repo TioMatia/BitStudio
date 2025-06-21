@@ -86,5 +86,12 @@ export class OrderService {
         order.status = newStatus;
         return this.orderRepository.save(order);
         }
+
+        async findAll(): Promise<Order[]> {
+        return this.orderRepository.find({
+            order: { createdAt: 'DESC' },
+        });
+        }
+
     
 }

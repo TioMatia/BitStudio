@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authApi, storeApi } from "../api/axios";
 import { loadCart } from "../store/carritoTienda";
-import { setCredentials } from "../store/auth"; // 👈 importante
+import { setCredentials } from "../store/auth"; 
 import "../styles/login.css";
 
 const LoginPage: React.FC = () => {

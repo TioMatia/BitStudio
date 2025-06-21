@@ -212,6 +212,7 @@ const InventarioTienda: React.FC = () => {
                                   name: item.name,
                                   price: item.price,
                                   quantity: 1,
+                                  inventoryId: item.id, 
                                 },
                               })
                             );

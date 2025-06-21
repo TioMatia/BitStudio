@@ -4,6 +4,7 @@ import axios from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 const MP_CLIENT_ID = process.env.MP_CLIENT_ID;
 const MP_CLIENT_SECRET = process.env.MP_CLIENT_SECRET;
@@ -22,7 +23,7 @@ private mercadopago = new MercadoPagoConfig({
 
   async createPreference(data: any) {
     const { items, sellerId } = data;
-
+    console.log("Items recibidos:", items);
     if (!items || !Array.isArray(items)) {
       throw new Error('Invalid payload: items must be an array');
     }
@@ -55,6 +56,7 @@ private mercadopago = new MercadoPagoConfig({
     const result = await preference.create({
       body: {
         items: data.items.map((item: any) => ({
+          id: item.id?.toString() ||  uuidv4(),
           title: item.name,
           quantity: item.quantity,
           unit_price: item.price,

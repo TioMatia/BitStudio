@@ -1,4 +1,4 @@
-// src/entities/provider.entity.ts
+
 
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Store } from './store.entity';

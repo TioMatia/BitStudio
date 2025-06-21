@@ -5,6 +5,10 @@ import { CreateOrderDto } from '../dto/create-order.dto';
 @Controller('orders')
 export class OrderController {
     constructor(private readonly orderService: OrderService) {}
+    @Get()
+    getAllOrders() {
+    return this.orderService.findAll();
+    }
 
     @Get('/store/:storeId')
     getOrdersByStore(@Param('storeId') storeId: number) {

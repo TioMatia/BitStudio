@@ -17,6 +17,10 @@ import SellerLayout from './layouts/SellerLayout';
 import HistorialVendedor from './pages/HistorialVendedor';
 import Proveedores from './pages/Proveedores';
 
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLayout from "./layouts/AdminLayout";
+import PrivateRouteAdmin from "./Restricciones/PrivateRouteAdmin";
+
 function App() {
 
   return (
@@ -39,16 +43,23 @@ function App() {
       </Route>
 
       <Route element={<PrivateRouteLocatario />}>
+      <Route path="/seller/crear-tienda" element={<CrearTiendaPage />} />
           <Route element={<SellerLayout />}>
-            <Route path="/seller/crear-tienda" element={<CrearTiendaPage />} />
             <Route path="/seller/mystore" element={<MyStorePage />} />
             <Route path= "/seller/historial" element ={<HistorialVendedor />} />
             <Route path= "/seller/proveedores" element ={<Proveedores />} />
           </Route>
       </Route>
-      
+      <Route element={<PrivateRouteAdmin />}>
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Route>
+      </Route>
+
       <Route path="*" element={<NotFound />} />
     </Routes>
+
+    
 
   );
 }
