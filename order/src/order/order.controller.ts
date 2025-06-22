@@ -1,35 +1,91 @@
-import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
+// order.controller.ts
+import { Controller, Post, Body, Get, Param, Patch, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 
 @Controller('orders')
 export class OrderController {
-    constructor(private readonly orderService: OrderService) {}
-    @Get()
-    getAllOrders() {
-    return this.orderService.findAll();
+  constructor(private readonly orderService: OrderService) {}
+
+  @Get()
+  getPaginatedOrders(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('storeId') storeId?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.orderService.findPaginated({
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      storeId: storeId ? parseInt(storeId) : undefined,
+      startDate,
+      endDate,
+    });
+  }
+
+    @Get("summary-by-client")
+    async getSummaryByClient(
+    @Query("storeId") storeId?: number,
+    @Query("startDate") startDate?: string,
+    @Query("endDate") endDate?: string,
+    ) {
+    return this.orderService.getResumenPorCliente(storeId, startDate, endDate);
     }
 
-    @Get('/store/:storeId')
-    getOrdersByStore(@Param('storeId') storeId: number) {
-    return this.orderService.findByStore(storeId);
+    @Get('sales-by-store')
+    getSalesByStore(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('storeId') storeId?: string,
+    ) {
+    return this.orderService.getVentasPorTienda(
+        storeId ? parseInt(storeId) : undefined,
+        startDate,
+        endDate
+    );
+    }
+    @Get("summary")
+    async getResumenGeneral(
+    @Query("storeId") storeId?: number,
+    @Query("startDate") startDate?: string,
+    @Query("endDate") endDate?: string,
+    ) {
+    return this.orderService.getResumenGeneral(storeId, startDate, endDate);
     }
 
-    @Post()
-        async create(@Body() dto: CreateOrderDto) {
-        const order = await this.orderService.createOrder(dto);
-        return {
-            message: 'Orden creada exitosamente',
-            order,
-        };
+    @Get('export')
+    getAllForExport(
+    @Query('storeId') storeId?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    ) {
+    return this.orderService.findForExport({
+        storeId: storeId ? parseInt(storeId) : undefined,
+        startDate,
+        endDate,
+    });
     }
     
-    @Patch(':id/status')
-        async updateStatus(
-        @Param('id') id: number,
-        @Body('status') status: string,
-        ) {
-        return this.orderService.updateStatus(id, status);
-        }
+  @Get('/store/:storeId')
+  getOrdersByStore(@Param('storeId') storeId: number) {
+    return this.orderService.findByStore(storeId);
+  }
 
+  @Post()
+  async create(@Body() dto: CreateOrderDto) {
+    const order = await this.orderService.createOrder(dto);
+    return {
+      message: 'Orden creada exitosamente',
+      order,
+    };
+  }
+
+  @Patch(':id/status')
+  async updateStatus(
+    @Param('id') id: number,
+    @Body('status') status: string,
+  ) {
+    return this.orderService.updateStatus(id, status);
+  }
 }

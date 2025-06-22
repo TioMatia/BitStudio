@@ -87,11 +87,155 @@ export class OrderService {
         return this.orderRepository.save(order);
         }
 
-        async findAll(): Promise<Order[]> {
+    async findAll(): Promise<Order[]> {
         return this.orderRepository.find({
             order: { createdAt: 'DESC' },
         });
+     }
+
+     async findPaginated(options: {
+            page: number;
+            limit: number;
+            storeId?: number;
+            startDate?: string;
+            endDate?: string;
+            }) {
+            const { page, limit, storeId, startDate, endDate } = options;
+
+            const query = this.orderRepository.createQueryBuilder('order');
+
+            if (storeId) {
+                query.andWhere('order.storeId = :storeId', { storeId });
+            }
+
+            if (startDate) {
+                query.andWhere('order.createdAt >= :startDate', { startDate });
+            }
+
+            if (endDate) {
+                query.andWhere('order.createdAt <= :endDate', { endDate });
+            }
+
+            query.orderBy('order.createdAt', 'DESC');
+
+            const [data, total] = await query
+                .skip((page - 1) * limit)
+                .take(limit)
+                .getManyAndCount();
+
+            return {
+                data,
+                total,
+                page,
+                pageCount: Math.ceil(total / limit),
+            };
+         }
+
+    async getResumenPorCliente(storeId?: number, startDate?: string, endDate?: string) {
+    const query = this.orderRepository
+        .createQueryBuilder("order")
+        .select("order.userName", "nombre")
+        .addSelect("SUM(order.total)", "totalGastado")
+        .addSelect("COUNT(order.id)", "cantidadOrdenes")
+        .groupBy("order.userName");
+
+    if (storeId) {
+        query.andWhere("order.storeId = :storeId", { storeId });
+    }
+
+    if (startDate) {
+        query.andWhere("order.createdAt >= :startDate", { startDate });
+    }
+
+    if (endDate) {
+        query.andWhere("order.createdAt <= :endDate", { endDate });
+    }
+
+    return await query.getRawMany();
+    }
+
+    async getResumenGeneral(storeId?: number, startDate?: string, endDate?: string) {
+        const query = this.orderRepository
+            .createQueryBuilder("order")
+            .select("SUM(order.total)", "totalVentas")
+            .addSelect("COUNT(order.id)", "cantidadOrdenes");
+
+        if (storeId) {
+            query.andWhere("order.storeId = :storeId", { storeId });
         }
+
+        if (startDate) {
+            query.andWhere("order.createdAt >= :startDate", { startDate });
+        }
+
+        if (endDate) {
+            query.andWhere("order.createdAt <= :endDate", { endDate });
+        }
+
+        const result = await query.getRawOne();
+
+        const totalVentas = parseFloat(result.totalVentas || 0);
+        const cantidadOrdenes = parseInt(result.cantidadOrdenes || 0);
+        const promedio = cantidadOrdenes > 0 ? totalVentas / cantidadOrdenes : 0;
+
+        return {
+            totalVentas,
+            cantidadOrdenes,
+            promedio,
+        };
+     }
+
+     async getVentasPorTienda(
+        storeId?: number,
+        startDate?: string,
+        endDate?: string,
+        ) {
+        const query = this.orderRepository
+            .createQueryBuilder('order')
+            .select('order.storeId', 'storeId')
+            .addSelect('SUM(order.total)', 'ventas')
+            .groupBy('order.storeId');
+
+        if (storeId) {
+            query.andWhere('order.storeId = :storeId', { storeId });
+        }
+
+        if (startDate) {
+            query.andWhere('order.createdAt >= :startDate', { startDate });
+        }
+
+        if (endDate) {
+            query.andWhere('order.createdAt <= :endDate', { endDate });
+        }
+
+        return query.getRawMany();
+        }
+
+    async findForExport(options: {
+        storeId?: number;
+        startDate?: string;
+        endDate?: string;
+        }) {
+        const { storeId, startDate, endDate } = options;
+
+        const query = this.orderRepository.createQueryBuilder('order');
+
+        if (storeId) {
+            query.andWhere('order.storeId = :storeId', { storeId });
+        }
+
+        if (startDate) {
+            query.andWhere('order.createdAt >= :startDate', { startDate });
+        }
+
+        if (endDate) {
+            query.andWhere('order.createdAt <= :endDate', { endDate });
+        }
+
+        query.orderBy('order.createdAt', 'DESC');
+
+        return query.getMany();
+    }
 
     
 }

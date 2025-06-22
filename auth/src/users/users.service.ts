@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -38,6 +38,38 @@ export class UsersService {
   async findOne(id: number): Promise<User | null> {
   return this.userRepo.findOne({ where: { id } });
   }
+
+   async findPaginated(options: {
+      page: number;
+      limit: number;
+      sortKey: string;
+      sortDir: 'asc' | 'desc';
+    }) {
+      const { page, limit, sortKey, sortDir } = options;
+
+      
+      const validSortKeys = ['id', 'firstName', 'lastName', 'email', 'createdAt'];
+      if (!validSortKeys.includes(sortKey)) {
+        throw new BadRequestException('Clave de orden inválida');
+      }
+
+      const query = this.userRepo.createQueryBuilder('user');
+
+      query.orderBy(`user.${sortKey}`, sortDir.toUpperCase() as 'ASC' | 'DESC');
+
+      const [data, total] = await query
+        .skip((page - 1) * limit)
+        .take(limit)
+        .getManyAndCount();
+
+      return {
+        data,
+        total,
+        page,
+        pageCount: Math.ceil(total / limit),
+      };
+    }
+
     
   async connectMercadoPago(userId: number, accessToken: string, mpUserId: string) {
   return this.userRepo.update(userId, {

@@ -18,6 +18,9 @@ import HistorialVendedor from './pages/HistorialVendedor';
 import Proveedores from './pages/Proveedores';
 
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminOrdersPage from "./pages/Admin/AdminOrdersPage";
+import AdminCustomersPage from "./pages/Admin/AdminCustomersPage";
+import AdminStoresPage from "./pages/Admin/AdminStoresPage";
 import AdminLayout from "./layouts/AdminLayout";
 import PrivateRouteAdmin from "./Restricciones/PrivateRouteAdmin";
 
@@ -53,6 +56,10 @@ function App() {
       <Route element={<PrivateRouteAdmin />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/orders" element={<AdminOrdersPage />} />
+          <Route path="/admin/stores" element={<AdminStoresPage />} />
+          <Route path="/admin/customers" element={<AdminCustomersPage />} />
+          
         </Route>
       </Route>
 

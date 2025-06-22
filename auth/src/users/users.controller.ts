@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, ParseIntPipe, Patch, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -9,6 +9,21 @@ export class UsersController {
   @Post('register')
   create(@Body() dto: CreateUserDto) {
     return this.usersService.create(dto);
+  }
+  
+  @Get()
+  getPaginatedUsers(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('sortKey') sortKey?: string,
+    @Query('sortDir') sortDir?: 'asc' | 'desc',
+  ) {
+    return this.usersService.findPaginated({
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      sortKey: sortKey || 'id',
+      sortDir: sortDir || 'asc',
+    });
   }
 
   @Get(':id')

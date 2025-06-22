@@ -21,13 +21,13 @@ const HeaderAdmin: React.FC = () => {
     <div className="header-container">
       <div className="header-title">Dashboard</div>
       <div className="header-actions">
-        {currentPath !== "admin/dashboard" && (
-          <button className="provider-button" onClick={() => navigate("admin/dashboard")}>
+        {currentPath !== "/admin/dashboard" && (
+          <button className="provider-button" onClick={() => navigate("/admin/dashboard")}>
             Dashboard 
           </button>
         )}
         {currentPath !== "/admin/ordenes" && (
-          <button className="provider-button" onClick={() => navigate("/admin/ordenes")}>
+          <button className="provider-button" onClick={() => navigate("/admin/orders")}>
             Ordenes
           </button>
         )}
@@ -39,16 +39,6 @@ const HeaderAdmin: React.FC = () => {
         {currentPath !== "admin/customers" && (
           <button className="provider-button" onClick={() => navigate("admin/customers")}>
             Clientes
-          </button>
-        )}
-        {currentPath !== "/admin/products" && (
-          <button className="provider-button" onClick={() => navigate("/admin/products")}>
-            Productos
-          </button>
-        )}
-        {currentPath !== "admin/reports" && (
-          <button className="provider-button" onClick={() => navigate("admin/reports")}>
-            Reportes
           </button>
         )}
         <div className="vertical-separator" />

@@ -126,3 +126,22 @@
 .admin-table td {
   text-align: center;
 }
+
+.inline-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.sort-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 6px;
+  font-size: 0.8em;
+  user-select: none;
+  color: #666;
+}
+
+.sort-button:hover {
+  color: #000;
+}
