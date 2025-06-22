@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../components/HeaderVendedor";
+import Header from "../components/HeaderAdmin";
 
 const SellerLayout: React.FC = () => {
   return (

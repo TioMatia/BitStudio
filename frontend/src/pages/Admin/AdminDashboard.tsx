@@ -3,10 +3,10 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip,
   ResponsiveContainer, CartesianGrid,
 } from "recharts";
-import { orderApi, storeApi } from "../api/axios";
+import { orderApi, storeApi } from "../../api/axios";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
-import "../styles/AdminDashboard.css";
+import "../../styles/AdminDashboard.css";
 
 interface Order {
   id: number;

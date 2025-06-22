@@ -17,7 +17,7 @@ import SellerLayout from './layouts/SellerLayout';
 import HistorialVendedor from './pages/HistorialVendedor';
 import Proveedores from './pages/Proveedores';
 
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminLayout from "./layouts/AdminLayout";
 import PrivateRouteAdmin from "./Restricciones/PrivateRouteAdmin";
 
