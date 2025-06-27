@@ -26,21 +26,13 @@ const HeaderAdmin: React.FC = () => {
             Dashboard 
           </button>
         )}
-        {currentPath !== "/admin/ordenes" && (
-          <button className="provider-button" onClick={() => navigate("/admin/orders")}>
-            Ordenes
-          </button>
-        )}
-        {currentPath !== "admin/stores" && (
-          <button className="provider-button" onClick={() => navigate("admin/stores")}>
+
+        {currentPath !== "/admin/stores" && (
+          <button className="provider-button" onClick={() => navigate("/admin/stores")}>
             Tiendas
           </button>
         )}
-        {currentPath !== "admin/customers" && (
-          <button className="provider-button" onClick={() => navigate("admin/customers")}>
-            Clientes
-          </button>
-        )}
+
         <div className="vertical-separator" />
         <button className="logout-button" onClick={handleLogout}>
           Cerrar sesión
