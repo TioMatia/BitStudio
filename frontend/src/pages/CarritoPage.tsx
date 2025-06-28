@@ -65,7 +65,7 @@ const handlePago = async () => {
 
     const { data } = await orderApi.post("/payment/create", payload);
 
-    // Redirige a Mercado Pago
+  
     window.location.href = data.init_point;
   } catch (error: any) {
     console.error("Error al crear preferencia:", error.response?.data || error);

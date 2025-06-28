@@ -22,7 +22,7 @@ constructor(
     async findAll(): Promise<Store[]> {
         return this.storeRepository.find({
             order: {
-            rating: 'DESC', 
+            totalSales: 'ASC', 
             },
         });
     }
@@ -81,28 +81,19 @@ constructor(
     }
 
     async updateRating(storeId: number, newRating: number): Promise<Store> {
-        console.log("iniciando calculos")
         const store = await this.storeRepository.findOne({ where: { id: storeId } });
         if (!store) throw new NotFoundException('Tienda no encontrada');
-
-        // Aquí una forma simple de calcular promedio incremental:
-        // score = suma total de ratings
-        // rating = promedio = score / totalRatings
-
-        // Suponiendo que guardas el número de valoraciones en 'score' y el promedio en 'rating'
-
-        // Aumentamos score sumando el nuevo rating
         store.score = (store.score || 0) + newRating;
-
-        // Suponiendo que también llevas un campo de 'numRatings' para cantidad de valoraciones:
-        // Si no existe, hay que agregarlo a la entidad Store:
-        // @Column({ default: 0 }) numRatings: number;
         store.numRatings = (store.numRatings || 0) + 1;
-
-        // Calculamos promedio
         store.rating = store.score / store.numRatings;
-
         return this.storeRepository.save(store);
         }
 
+    async incrementSales(storeId: number): Promise<Store> {
+        const store = await this.storeRepository.findOne({ where: { id: storeId } });
+        if (!store) throw new NotFoundException('Tienda no encontrada');
+
+        store.totalSales = (store.totalSales || 0) + 1;
+        return this.storeRepository.save(store);
+    }
 }

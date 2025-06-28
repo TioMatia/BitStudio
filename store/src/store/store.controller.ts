@@ -35,4 +35,9 @@ async updateRating(
 ) {
   return this.storeService.updateRating(id, rating);
 }
+
+@Patch(':id/increment-sales')
+incrementSales(@Param('id') id: number) {
+  return this.storeService.incrementSales(id);
+}
 }

@@ -40,6 +40,17 @@ export class OrderService {
         });
 
         await this.orderRepository.save(order);
+        const storeId = order.storeId;
+        
+        try {
+        await firstValueFrom(
+            this.httpService.patch(
+            `http://store_service:3000/stores/${storeId}/increment-sales`
+            )
+        );
+        } catch (err) {
+        console.error('❌ Error al incrementar ventas en store_service:', err.message);
+        }
 
         return order;
     }

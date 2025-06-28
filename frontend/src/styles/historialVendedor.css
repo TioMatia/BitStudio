@@ -175,3 +175,12 @@
   color: #166534;
   border: 1px solid #86efac;
 }
+
+.vendedor-order-comment {
+  margin-top: 8px;
+  padding: 10px;
+  background-color: #f6f6f6;
+  border-left: 4px solid #4caf50;
+  font-style: italic;
+  color: #333;
+}

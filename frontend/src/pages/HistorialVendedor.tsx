@@ -18,9 +18,11 @@ interface Order {
   items: OrderItem[];
   orderNumber: string;
   deliveryMethod: "pickup" | "delivery";
+  comment?: string;
+  rating?: number;
 }
 
-const pageSize = 5; // cantidad de órdenes por página
+const pageSize = 10; 
 
 const HistorialVendedor = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -46,6 +48,12 @@ const HistorialVendedor = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getRatingColor = (rating: number) => {
+    if (rating >= 4) return "green";
+    if (rating === 3) return "orange";
+    return "red";
   };
 
   useEffect(() => {
@@ -112,6 +120,12 @@ return (
               <p><strong>Número de orden:</strong> {order.orderNumber}</p>
               <p><strong>Comprador:</strong> {order.userName}</p>
               <p><strong>Fecha:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+              {order.rating !== undefined && (
+                <p style={{ color: getRatingColor(order.rating) }}>
+                  <strong>Calificación:</strong>{" "}
+                  {"★".repeat(order.rating)}{"☆".repeat(5 - order.rating)} ({order.rating}/5)
+                </p>
+              )}
               <p><strong>Total:</strong> {formatCurrency(order.total)}</p>
               <ul className="vendedor-order-items">
                 {order.items.map((item) => (
@@ -120,6 +134,11 @@ return (
                   </li>
                 ))}
               </ul>
+              {order.comment && (
+                <p className="vendedor-order-comment">
+                  <strong>Comentario del comprador:</strong> {order.comment}
+                </p>
+              )}
             </div>
 
             <div className="vendedor-order-actions">

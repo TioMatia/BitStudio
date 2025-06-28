@@ -11,6 +11,7 @@ interface Order {
   createdAt: string;
   storeName: string;
   rated: boolean;
+  items?: { name: string; price: number; quantity: number }[];
 }
 
 const pageSize = 10;
@@ -26,7 +27,8 @@ const HistorialDeCompras: React.FC = () => {
   const [sortDir, setSortDir] = useState<"ASC" | "DESC">("DESC");
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-
+  const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
+  
   useEffect(() => {
     const fetchOrders = async () => {
       if (!userId) return;
@@ -117,59 +119,92 @@ const HistorialDeCompras: React.FC = () => {
         <div className="historial-table">
           <table>
             <thead>
-              <tr>
-                <th>Tienda</th>
-                <th>Orden</th>
-                <th>
-                  Total
-                  <button className="sort-button" onClick={() => toggleSort("total")}>
-                    {sortKey === "total" ? (sortDir === "ASC" ? "▲" : "▼") : "↕"}
-                  </button>
-                </th>
-                <th>
-                  Estado
-                  <button className="sort-button" onClick={() => toggleSort("status")}>
-                    {sortKey === "status" ? (sortDir === "ASC" ? "▲" : "▼") : "↕"}
-                  </button>
-                </th>
-                <th>
-                  Fecha
-                  <button className="sort-button" onClick={() => toggleSort("createdAt")}>
-                    {sortKey === "createdAt" ? (sortDir === "ASC" ? "▲" : "▼") : "↕"}
-                  </button>
-                </th>
-                <th>Acción</th>
-              </tr>
-            </thead>
+            <tr>
+              <th></th> {/* columna para la flecha */}
+              <th>Tienda</th>
+              <th>Número de orden</th>
+              <th>
+                Total
+                <button className="sort-button" onClick={() => toggleSort("total")}>
+                  {sortKey === "total" ? (sortDir === "ASC" ? "▲" : "▼") : "↕"}
+                </button>
+              </th>
+              <th>
+                Estado
+                <button className="sort-button" onClick={() => toggleSort("status")}>
+                  {sortKey === "status" ? (sortDir === "ASC" ? "▲" : "▼") : "↕"}
+                </button>
+              </th>
+              <th>
+                Fecha
+                <button className="sort-button" onClick={() => toggleSort("createdAt")}>
+                  {sortKey === "createdAt" ? (sortDir === "ASC" ? "▲" : "▼") : "↕"}
+                </button>
+              </th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
             <tbody>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td>{order.storeName}</td>
-                  <td>{order.orderNumber}</td>
-                  <td>
-                    {new Intl.NumberFormat("es-CL", {
-                      style: "currency",
-                      currency: "CLP",
-                    }).format(Number(order.total))}
-                  </td>
-                  <td>{order.status}</td>
-                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                  <td>
-                    {order.status === "Entregado" && !order.rated ? (
-                      <button
-                        className="rate-button"
-                        onClick={() => setSelectedOrder(order)}
-                      >
-                        Valorar tienda
-                      </button>
-                    ) : (
-                      order.rated && <span className="rated-tag">Valorado</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {orders.map((order) => (
+    <React.Fragment key={order.id}>
+      <tr>
+        <td>
+          <button
+            className="toggle-detail-button"
+            onClick={() =>
+              setExpandedOrderId(expandedOrderId === order.id ? null : order.id)
+            }
+          >
+            {expandedOrderId === order.id ? "▲" : "▼"}
+          </button>
+        </td>
+        <td>{order.storeName}</td>
+        <td>{order.orderNumber}</td>
+        <td>
+          {new Intl.NumberFormat("es-CL", {
+            style: "currency",
+            currency: "CLP",
+          }).format(Number(order.total))}
+        </td>
+        <td>{order.status}</td>
+        <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+        <td>
+          {order.status === "Entregado" && !order.rated ? (
+            <button
+              className="rate-button"
+              onClick={() => setSelectedOrder(order)}
+            >
+              Calificar pedido
+            </button>
+          ) : (
+            order.rated && <span className="rated-tag">Calificado</span>
+          )}
+        </td>
+      </tr>
+
+      {expandedOrderId === order.id && (
+        <tr className="order-detail-row">
+          <td colSpan={7}>
+            <div className="order-details-expanded">
+              <h4>Detalle del pedido</h4>
+              <ul>
+                {order.items?.map((item, index) => (
+                  <li key={index}>
+                    {item.name} - {item.quantity} x ${item.price.toFixed(0)} = $
+                    {(item.price * item.quantity).toFixed(0)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </td>
+        </tr>
+      )}
+    </React.Fragment>
+  ))}
+</tbody>
           </table>
+
 
           <div className="historial-pagination">
             <button

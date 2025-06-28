@@ -45,6 +45,9 @@ export class Store {
   @Column()
   userId: number; 
 
+  @Column({ default: 0 })
+  totalSales: number;
+  
   @OneToMany(() => Provider, (provider) => provider.store)
   providers: Provider[];
 }
