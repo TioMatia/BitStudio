@@ -23,6 +23,7 @@ import AdminCustomersPage from "./pages/Admin/AdminCustomersPage";
 import AdminStoresPage from "./pages/Admin/AdminStoresPage";
 import AdminLayout from "./layouts/AdminLayout";
 import PrivateRouteAdmin from "./Restricciones/PrivateRouteAdmin";
+import HistorialDeCompras from './pages/HistorialDeCompras';
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
             <Route path=":storeId" element={<InventarioTienda />} />
           </Route>
           <Route path="/cart" element={<CarritoPage />} />
+          <Route path="/history" element ={<HistorialDeCompras/>} />
         </Route>
       </Route>
 

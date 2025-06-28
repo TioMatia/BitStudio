@@ -13,25 +13,44 @@ interface Order {
   id: number;
   userName: string;
   createdAt: string;
-  total: number | string; 
+  total: number | string;
   status: string;
   items: OrderItem[];
   orderNumber: string;
   deliveryMethod: "pickup" | "delivery";
 }
 
+const pageSize = 5; // cantidad de órdenes por página
+
 const HistorialVendedor = () => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(false);
   const storeId = localStorage.getItem("storeId");
 
-  useEffect(() => {
-    if (!storeId) return;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-    orderApi
-      .get(`/orders/store/${storeId}`)
-      .then((res) => setOrders(res.data))
-      .catch((err) => console.error("Error cargando órdenes:", err));
-  }, [storeId]);
+  const fetchOrders = async (page: number) => {
+    if (!storeId) return;
+    setLoading(true);
+    try {
+      const res = await orderApi.get(`/orders/store/${storeId}`, {
+        params: { page, limit: pageSize },
+      });
+
+      // Ajusta según estructura real de respuesta backend
+      setOrders(Array.isArray(res.data.data) ? res.data.data : []);
+      setTotalPages(res.data.pageCount ?? 1);
+    } catch (err) {
+      console.error("Error cargando órdenes:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders(currentPage);
+  }, [storeId, currentPage]);
 
   const formatCurrency = (value: number | string) => {
     const numberValue = typeof value === "string" ? parseFloat(value) : value;
@@ -64,20 +83,37 @@ const HistorialVendedor = () => {
     }
   };
 
-  return (
-    <div className="historial-container">
-      <h2>Historial de Ventas</h2>
-      {orders.length === 0 ? (
-        <p>No hay ventas registradas.</p>
-      ) : (
-        orders.map((order) => (
-          <div key={order.id} className="order-card">
-            <div className="order-details">
+  const handleMarkEntregado = async (order: Order) => {
+    try {
+      const res = await orderApi.patch(`/orders/${order.id}/status`, { status: "Entregado" });
+
+      setOrders((prev) =>
+        prev.map((o) => (o.id === order.id ? { ...o, status: res.data.status } : o))
+      );
+    } catch (err) {
+      console.error("Error al marcar como Entregado:", err);
+      alert("❌ No se pudo actualizar el estado.");
+    }
+  };
+
+return (
+  <div className="vendedor-historial-container">
+    <h2>Historial de Ventas</h2>
+
+    {loading ? (
+      <p>Cargando órdenes...</p>
+    ) : orders.length === 0 ? (
+      <p>No hay ventas registradas.</p>
+    ) : (
+      <>
+        {orders.map((order) => (
+          <div key={order.id} className="vendedor-order-card">
+            <div className="vendedor-order-details">
               <p><strong>Número de orden:</strong> {order.orderNumber}</p>
               <p><strong>Comprador:</strong> {order.userName}</p>
               <p><strong>Fecha:</strong> {new Date(order.createdAt).toLocaleString()}</p>
               <p><strong>Total:</strong> {formatCurrency(order.total)}</p>
-              <ul className="order-items">
+              <ul className="vendedor-order-items">
                 {order.items.map((item) => (
                   <li key={item.id}>
                     - Producto: {item.name} - Cantidad: {item.quantity} - {formatCurrency(item.price)}
@@ -86,28 +122,51 @@ const HistorialVendedor = () => {
               </ul>
             </div>
 
-           
-            <div className="order-actions">
-              <div className="order-status">
+            <div className="vendedor-order-actions">
+              <div
+                className={`vendedor-order-status ${
+                  order.status === "pendiente"
+                    ? "status-pendiente"
+                    : order.status === "Entregado"
+                    ? "status-entregado"
+                    : "status-disponible"
+                }`}
+              >
                 {order.status}
               </div>
 
-              <button
-                className="status-btn"
-                onClick={() => handleStatusToggle(order)}
-              >
-                {order.status === "pendiente"
-                  ? order.deliveryMethod === "pickup"
+              {order.status === "pendiente" ? (
+                <button className="vendedor-status-btn" onClick={() => handleStatusToggle(order)}>
+                  {order.deliveryMethod === "pickup"
                     ? "Marcar como listo para retiro"
-                    : "Marcar como listo para delivery"
-                  : "Revertir a pendiente"}
-              </button>
+                    : "Marcar como listo para delivery"}
+                </button>
+              ) : order.status === "Disponible para retiro" || order.status === "Disponible para delivery" ? (
+                <>
+                  <button className="vendedor-status-btn entregado-btn" onClick={() => handleMarkEntregado(order)}>
+                    Marcar como entregado
+                  </button>
+                  <button className="vendedor-status-btn volver-btn" onClick={() => handleStatusToggle(order)}>
+                    Volver
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
-        ))
-      )}
-    </div>
-  );
-};
+        ))}
 
+        <div className="vendedor-pagination">
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
+            Anterior
+          </button>
+          <span>Página {currentPage} de {totalPages}</span>
+          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>
+            Siguiente
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+);
+}
 export default HistorialVendedor;

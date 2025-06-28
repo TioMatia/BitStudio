@@ -40,4 +40,14 @@ createdAt: Date;
 
 @Column()
 deliveryMethod: 'delivery' | 'pickup';
+
+@Column({ type: 'int', nullable: true })
+rating?: number;
+
+@Column({ type: 'text', nullable: true })
+comment?: string;
+
+@Column({ default: false })
+rated: boolean;
+
 }

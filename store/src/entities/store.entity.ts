@@ -27,14 +27,17 @@ export class Store {
   @Column({ type: 'float', default: 0 })
   deliveryFee: number;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', default: 0 })
   rating: number;
 
   @Column({ nullable: true })
   estimatedTime: string;
 
-  @Column({ default: 0 })
-  score: number;
+  @Column({ type: 'float', default: 0 })
+  score: number; number;
+
+  @Column({ type: 'int', default: 0 })
+  numRatings: number;
 
   @CreateDateColumn()
   createdAt: Date;

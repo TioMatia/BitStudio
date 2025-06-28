@@ -1,4 +1,4 @@
-.historial-container {
+.vendedor-historial-container {
   max-width: 900px;
   margin: 2rem auto;
   padding: 1.5rem;
@@ -9,7 +9,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.historial-container h2 {
+.vendedor-historial-container h2 {
   text-align: center;
   font-weight: 700;
   font-size: 2rem;
@@ -17,8 +17,7 @@
   color: #1f2937;
 }
 
-.order-card {
-  background: #fff;
+.vendedor-order-card {
   border-radius: 12px;
   padding: 1.5rem 2rem;
   margin-bottom: 1.5rem;
@@ -29,24 +28,37 @@
   transition: box-shadow 0.3s ease;
 }
 
-.order-card:hover {
+.vendedor-order-card:hover {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-.order-details {
+/* Colores por estado */
+.vendedor-pendiente {
+  background-color: #fff8dc; /* amarillo claro */
+}
+
+.vendedor-disponible {
+  background-color: #e0f7fa; /* celeste claro */
+}
+
+.vendedor-entregado {
+  background-color: #e0ffe0; /* verde muy claro */
+}
+
+.vendedor-order-details {
   max-width: 70%;
 }
 
-.order-details p {
+.vendedor-order-details p {
   margin: 0.3rem 0;
   font-size: 1rem;
 }
 
-.order-details p strong {
-  color: #2563eb; /* azul vibrante */
+.vendedor-order-details p strong {
+  color: #2563eb;
 }
 
-.order-items {
+.vendedor-order-items {
   list-style: none;
   padding-left: 0;
   margin-top: 0.75rem;
@@ -54,19 +66,19 @@
   padding-top: 0.75rem;
 }
 
-.order-items li {
+.vendedor-order-items li {
   margin-bottom: 0.5rem;
   font-size: 1rem;
   color: #4b5563;
 }
 
-.order-status {
+.vendedor-order-status {
   min-width: 110px;
-  background-color: #e0e7ff; /* fondo azul claro */
-  color: #3730a3; /* texto azul oscuro */
+  background-color: #e0e7ff;
+  color: #3730a3;
   font-weight: 600;
   text-transform: capitalize;
-  border-radius: 9999px; /* pill */
+  border-radius: 9999px;
   padding: 0.5rem 1rem;
   text-align: center;
   align-self: center;
@@ -74,8 +86,7 @@
   user-select: none;
 }
 
-/* Nuevo contenedor para estado + botón */
-.order-actions {
+.vendedor-order-actions {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -85,38 +96,82 @@
 }
 
 @media (max-width: 720px) {
-  .order-card {
+  .vendedor-order-card {
     flex-direction: column;
   }
 
-  .order-details {
+  .vendedor-order-details {
     max-width: 100%;
   }
 
-  .order-actions {
+  .vendedor-order-actions {
     align-items: flex-start;
     margin-top: 1rem;
   }
 }
 
-.status-btn {
+.vendedor-status-btn {
   padding: 10px 12px;
   font-weight: bold;
-  background-color: #3f51b5;
-  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  color: white;
+  background-color: #1d3b7c;
+  border: #ffffff;
+  font-size: 0.8rem;
 }
 
-.status-btn:hover {
-  background-color: #303f9f;
+.vendedor-status-btn:hover {
+  background-color: rgb(5, 80, 161);
 }
 
-.order-button {
-  margin-top: 0.75rem;
-  width: 100%;
+.vendedor-status-btn.volver-btn {
+  background-color: #6e6e6e; 
+  
+}
+
+.vendedor-status-btn.volver-btn:hover {
+  background-color: #444444;
+  
+}
+
+.vendedor-pagination {
+  margin-top: 2rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vendedor-order-status {
+  min-width: 150px;
+  font-weight: 600;
+  text-transform: capitalize;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  align-self: center;
+  user-select: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Colores por estado */
+.vendedor-order-status.status-pendiente {
+  background-color: #fff7cc;
+  color: #b45309;
+  border: 1px solid #facc15;
+}
+
+.vendedor-order-status.status-disponible {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #60a5fa;
+}
+
+.vendedor-order-status.status-entregado {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
 }

@@ -8,7 +8,7 @@ import "../styles/header.css";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-
+  const currentPath = location.pathname;
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const handleLogout = () => {
@@ -23,6 +23,18 @@ const Header: React.FC = () => {
     <div className="header-container">
       <div className="header-title">BITSTUDIO</div>
         <div className="header-actions">
+        {currentPath !== "/shop" && (
+          <button className="provider-button" onClick={() => navigate("/shop")}>
+            Tiendas
+          </button>
+         )}
+
+          {currentPath !== "/history" && (
+            <button className="provider-button" onClick={() => navigate("/history")}>
+              Historial de Compras
+            </button>
+         )}
+
           <button className="logout-button" onClick={handleLogout}>
             Cerrar sesión
           </button>

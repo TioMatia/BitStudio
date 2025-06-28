@@ -5,6 +5,7 @@ import { Order } from './entities/order.entity';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
 import { User } from './entities/user.entity';
+import { Rating } from './entities/rating.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { User } from './entities/user.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Order, User],
+      entities: [Order, User, Rating],
       synchronize: true,
     }),
     OrderModule,

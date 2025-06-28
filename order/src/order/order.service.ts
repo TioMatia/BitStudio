@@ -16,15 +16,12 @@ export class OrderService {
     ) {}
 
     async createOrder(dto: CreateOrderDto): Promise<Order> {
-        // 1. Preparar items para actualizar stock
-        // Asumo que dto.items tiene algo así:
-        // [{ inventoryId: number, quantity: number, ... }, ...]
         const stockItems = dto.items.map(item => ({
             inventoryId: item.inventoryId,
             quantity: item.quantity,
         }));
 
-        // 2. Llamar al microservicio inventory para decrementar stock
+
         try {
             await firstValueFrom(
                 this.httpService.patch(
@@ -36,7 +33,7 @@ export class OrderService {
             throw new InternalServerErrorException('No se pudo actualizar el stock: ' + error.message);
         }
 
-        // 3. Crear la orden solo si la actualización del stock fue exitosa
+
         const order = this.orderRepository.create({
             ...dto,
             orderNumber: this.generateOrderNumber(),
@@ -54,6 +51,37 @@ export class OrderService {
     });
     }
 
+    async findByStorePaginated(options: {
+        storeId: number;
+        page: number;
+        limit: number;
+        startDate?: string;
+        endDate?: string;
+        }) {
+        const { storeId, page, limit, startDate, endDate } = options;
+
+        const query = this.orderRepository
+            .createQueryBuilder('order')
+            .where('order.storeId = :storeId', { storeId });
+
+        if (startDate) query.andWhere('order.createdAt >= :startDate', { startDate });
+        if (endDate) query.andWhere('order.createdAt <= :endDate', { endDate });
+
+        query.orderBy('order.createdAt', 'DESC');
+
+        const [data, total] = await query
+            .skip((page - 1) * limit)
+            .take(limit)
+            .getManyAndCount();
+
+        return {
+            data,
+            total,
+            page,
+            pageCount: Math.ceil(total / limit),
+        };
+        }
+
     private generateOrderNumber(): string {
     const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const randomPart = randomBytes(3).toString('hex').toUpperCase(); 
@@ -67,25 +95,33 @@ export class OrderService {
             throw new NotFoundException('Orden no encontrada');
         }
 
-        const validStatuses = ['pendiente', 'Disponible para retiro', 'Disponible para delivery'];
-        if (!validStatuses.includes(newStatus)) {
+    const validStatuses = [
+    'pendiente',
+    'Disponible para retiro',
+    'Disponible para delivery',
+    'Entregado'
+    ];   
+
+     if (!validStatuses.includes(newStatus)) {
             throw new BadRequestException('Estado inválido');
         }
 
-        // Cambios permitidos
-        const puedeCambiar =
-            (order.status === 'pendiente' &&
-            (newStatus === 'Disponible para retiro' || newStatus === 'Disponible para delivery')) ||
-            ((order.status === 'Disponible para retiro' || order.status === 'Disponible para delivery') &&
-            newStatus === 'pendiente');
 
-        if (!puedeCambiar) {
-            throw new BadRequestException('Cambio de estado no permitido');
-        }
+    const puedeCambiar =
+    (order.status === 'pendiente' &&
+        (newStatus === 'Disponible para retiro' || newStatus === 'Disponible para delivery')) ||
 
-        order.status = newStatus;
-        return this.orderRepository.save(order);
-        }
+    ((order.status === 'Disponible para retiro' || order.status === 'Disponible para delivery') &&
+        (newStatus === 'pendiente' || newStatus === 'Entregado'));
+
+
+    if (!puedeCambiar) {
+        throw new BadRequestException('Cambio de estado no permitido');
+    }
+
+    order.status = newStatus;
+    return this.orderRepository.save(order);
+    }
 
     async findAll(): Promise<Order[]> {
         return this.orderRepository.find({
@@ -236,6 +272,77 @@ export class OrderService {
 
         return query.getMany();
     }
+
+    async findByUser(
+    userId: number,
+    startDate?: string,
+    endDate?: string,
+    sortKey: string = 'createdAt',
+    sortDir: 'ASC' | 'DESC' = 'DESC',
+    page: number = 1,
+    limit: number = 10,
+    ) {
+    const query = this.orderRepository
+        .createQueryBuilder('order')
+        .where('order.userId = :userId', { userId });
+
+    if (startDate) query.andWhere('order.createdAt >= :startDate', { startDate });
+    if (endDate) query.andWhere('order.createdAt <= :endDate', { endDate });
+
+    const validSortKeys = ['createdAt', 'total', 'status'];
+    const finalSortKey = validSortKeys.includes(sortKey) ? sortKey : 'createdAt';
+    const finalSortDir = sortDir === 'ASC' ? 'ASC' : 'DESC';
+
+    query.orderBy(`order.${finalSortKey}`, finalSortDir);
+
+    const [data, total] = await query
+        .skip((page - 1) * limit)
+        .take(limit)
+        .getManyAndCount();
+
+    return {
+        data,
+        total,
+        page,
+        pageCount: Math.ceil(total / limit),
+    };
+    }
+
+    async markAsRated(orderId: number): Promise<Order> {
+    const order = await this.orderRepository.findOne({ where: { id: orderId } });
+    if (!order) throw new NotFoundException('Orden no encontrada');
+
+    order.rated = true;
+    return this.orderRepository.save(order);
+    }
+
+    async rateOrder(orderId: number, rating: number, comment: string) {
+    const order = await this.orderRepository.findOne({ where: { id: orderId } });
+    if (!order) throw new Error('Orden no encontrada');
+
+    order.rating = rating;
+    order.comment = comment;
+    order.rated = true;
+
+    await this.orderRepository.save(order);
+
+    const storeId = order.storeId;
+
+    
+    try {
+        await firstValueFrom(
+        this.httpService.patch(`http://store_service:3000/stores/${storeId}/rating`, {
+            rating, 
+        }),
+        );
+    } catch (error) {
+        console.error('Error notificando a store-service para actualizar rating:', error.message);
+    }
+
+    return order;
+    }
+
+
 
     
 }

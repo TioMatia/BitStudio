@@ -68,9 +68,44 @@ export class OrderController {
     }
     
   @Get('/store/:storeId')
-  getOrdersByStore(@Param('storeId') storeId: number) {
-    return this.orderService.findByStore(storeId);
+  getOrdersByStorePaginated(
+    @Param('storeId') storeId: number,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.orderService.findByStorePaginated({
+      storeId: +storeId,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      startDate,
+      endDate,
+    });
   }
+
+  @Get('user/:userId')
+  async getOrdersByUser(
+    @Param('userId') userId: number,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('sortKey') sortKey?: string,
+    @Query('sortDir') sortDir?: 'ASC' | 'DESC',
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    return this.orderService.findByUser(
+      +userId,
+      startDate,
+      endDate,
+      sortKey,
+      sortDir,
+      parseInt(page),
+      parseInt(limit),
+    );
+  }
+
+
 
   @Post()
   async create(@Body() dto: CreateOrderDto) {
@@ -88,4 +123,18 @@ export class OrderController {
   ) {
     return this.orderService.updateStatus(id, status);
   }
+
+  @Patch(':id/rated')
+  markOrderRated(@Param('id') id: number) {
+    return this.orderService.markAsRated(+id);
+  }
+
+  @Patch(':id/rate')
+  async rateOrder(
+    @Param('id') id: number,
+    @Body() body: { rating: number; comment: string }
+  ) {
+    return this.orderService.rateOrder(+id, body.rating, body.comment);
+  }
+
 }
