@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Inventory } from './entities/inventory.entity';
 import { InventoryModule } from './inventory/inventory.module';
+import { Category } from './entities/category.entity';
+import { CategoryModule } from './category/category.module';
 
 
 @Module({
@@ -15,10 +17,11 @@ import { InventoryModule } from './inventory/inventory.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Inventory],
+      entities: [Inventory,Category],
       synchronize: true,
     }),
     InventoryModule,
+    CategoryModule
   ],
 })
 export class AppModule {}

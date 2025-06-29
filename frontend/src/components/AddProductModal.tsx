@@ -15,6 +15,11 @@ interface Provider {
   name: string;
 }
 
+interface Category {
+  id: number;
+  name: string;
+}
+
 function formatCLP(value: string) {
   if (!value) return "";
   const onlyNums = value.replace(/[^0-9.,]/g, '');
@@ -45,15 +50,55 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
   });
 
   const [providers, setProviders] = useState<Provider[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [newCategoryName, setNewCategoryName] = useState<string>("");
 
   useEffect(() => {
     if (open) {
+      // Traer proveedores
       storeApi.get(`/stores/${storeId}/providers`)
         .then(res => setProviders(res.data))
         .catch(err => console.error("Error al cargar proveedores:", err));
+
+      // Traer categorías del backend
+    inventoryApi.get(`/categories/store/${storeId}`)
+      .then(res => setCategories(res.data))
+        .catch(err => console.error("Error al cargar categorías:", err));
     }
   }, [open, storeId]);
 
+  // Guardar categorías seleccionadas en localStorage (opcional)
+  useEffect(() => {
+    localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
+  }, [selectedCategories]);
+
+  const handleAddCategory = async () => {
+    const trimmedName = newCategoryName.trim();
+    if (!trimmedName) return;
+
+    const exists = categories.some(cat => cat.name.toLowerCase() === trimmedName.toLowerCase());
+    if (exists) {
+      alert("La categoría ya existe");
+      return;
+    }
+
+    try {
+      const res = await inventoryApi.post("/categories", {
+        name: trimmedName,
+        storeId, // Se envía el ID de la tienda
+      });
+
+      const newCat = res.data;
+      setCategories(prev => [...prev, newCat]);
+      setSelectedCategories(prev => [...prev, newCat.id]);
+      setNewCategoryName("");
+    } catch (error) {
+      console.error("Error al crear categoría:", error);
+      alert("❌ No se pudo crear la categoría.");
+    }
+  };
+  
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const clean = unformatCLP(input);
@@ -98,6 +143,7 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       storeId,
       ...(form.providerId && { providerId: parseInt(form.providerId) }),
       ...(imageUrl && { image: imageUrl }),
+      categoryIds: selectedCategories,
     });
 
     setForm({
@@ -108,7 +154,8 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       providerId: "",
       image: null,
     });
-
+    setSelectedCategories([]);
+    setNewCategoryName("");
     onProductAdded();
     onClose();
   };
@@ -155,6 +202,38 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
             onChange={handleChange}
             required
           />
+
+          <label>Categorías:</label>
+          <div className="categories-container">
+            <select
+              multiple
+              className="categories-select"
+              value={selectedCategories.map(String)}
+              onChange={(e) => {
+                const values = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                setSelectedCategories(values);
+              }}
+            >
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+
+            <div className="new-category-wrapper">
+              <input
+                type="text"
+                className="new-category-input"
+                placeholder="Nueva categoría"
+                value={newCategoryName}
+                onChange={e => setNewCategoryName(e.target.value)}
+              />
+              <button type="button" className="new-category-button" onClick={handleAddCategory}>
+                + Agregar categoría
+              </button>
+            </div>
+          </div>
 
           <select name="providerId" value={form.providerId} onChange={handleChange}>
             <option value="">Seleccionar proveedor ↴</option>

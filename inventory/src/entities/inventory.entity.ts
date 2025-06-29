@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Category } from './category.entity';
 
 @Entity()
 export class Inventory {
@@ -29,4 +30,8 @@ createdAt: Date;
 @Column({ nullable: true })
 providerId: number;
 
+  @ManyToMany(() => Category, (category) => category.inventories, { cascade: true })
+  @JoinTable()
+  categories: Category[];
+  
 }

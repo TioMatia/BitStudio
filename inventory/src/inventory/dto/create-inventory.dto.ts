@@ -1,4 +1,4 @@
-import {IsString, IsNotEmpty, IsOptional, IsNumber, Min, IsInt,
+import {IsString, IsNotEmpty, IsOptional, IsNumber, Min, IsInt, IsArray,
 } from 'class-validator';
 
 export class CreateInventoryDto {
@@ -28,5 +28,13 @@ image?: string;
 @IsOptional()
 @IsNumber()
 providerId?: number;
+
+@IsOptional()
+@IsArray()
+@IsString({ each: true })
+categories?: string[];
+
+@IsOptional()
+categoryIds?: number[];
 
 }
