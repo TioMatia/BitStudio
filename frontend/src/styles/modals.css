@@ -41,7 +41,13 @@ border-radius: 8px;
 }
 
 .modal-card textarea {
-resize: vertical;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-actions {
@@ -51,18 +57,7 @@ gap: 0.8rem;
 margin-top: 1rem;
 }
 
-.button-primary {
-background-color: #000000;
-color: white;
-border: none;
-padding: 0.6rem 1rem;
-border-radius: 6px;
-cursor: pointer;
-}
 
-.button-primary:hover {
-background-color: #009e00;
-}
 
 .button-secondary {
 background-color: #ccc;
@@ -117,20 +112,34 @@ margin-bottom: 0.5rem;
 margin-top: 0.4rem;
 }
 
-.input-with-prefix {
-position: relative;
-display: flex;
-align-items: center;
+
+.modal-card select {
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 1rem;
+  cursor: pointer;
 }
 
-.input-with-prefix .prefix {
-position: absolute;
-left: 12px;
-color: #555;
-pointer-events: none;
-font-size: 1rem;
+.modal-card select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.input-with-prefix {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .input-with-prefix input {
-padding-left: 1.5rem;
+  padding-left: 0.5rem;
+  width: 100%;
 }

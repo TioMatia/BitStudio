@@ -27,12 +27,16 @@
   cursor: pointer;
 }
 
+.add-btn:hover {
+  background-color: #0056b3
+}
+
 .proveedor-card {
   background: #f9f9f9;
   padding: 1rem;
   border-radius: 1rem;
   margin-bottom: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .acciones {

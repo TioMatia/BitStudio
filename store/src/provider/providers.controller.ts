@@ -13,6 +13,11 @@ export class ProvidersController {
   findAll(@Param('storeId') storeId: string) {
     return this.providersService.findAll(+storeId);
   }
+  
+    @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.providersService.findById(+id);
+  }
 
   @Post()
   create(@Param('storeId') storeId: string, @Body() body: CreateProviderDto) {

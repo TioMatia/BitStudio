@@ -25,4 +25,8 @@ image: string;
 
 @CreateDateColumn()
 createdAt: Date;
+
+@Column({ nullable: true })
+providerId: number;
+
 }

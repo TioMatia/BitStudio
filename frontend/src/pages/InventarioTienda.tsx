@@ -8,7 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { addItem, setItemQuantity, removeItem } from "../store/carritoTienda";
 import { FaTrash } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
 
 interface InventoryItem {
   id: number;
@@ -51,11 +54,14 @@ const InventarioTienda: React.FC = () => {
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [quantities, setQuantities] = useState<Record<number, number>>({});
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
 
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchInventory = async () => {
       try {
         const res = await inventoryApi.get(`/inventory/store/${storeId}`);
@@ -81,9 +87,23 @@ const InventarioTienda: React.FC = () => {
     }
   }, [storeId]);
 
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
+    useEffect(() => {
+      const prices = items.map(item => item.price);
+      if (prices.length > 0) {
+        const min = Math.floor(Math.min(...prices));
+        const max = Math.ceil(Math.max(...prices));
+        setMinPrice(min);
+        setMaxPrice(max);
+        setPriceRange([min, max]); 
+      }
+    }, [items]);
+
+    const filteredItems = items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(search.toLowerCase()) &&
+        item.price >= priceRange[0] &&
+        item.price <= priceRange[1]
+    );
 
   return (
     <div className="inventario-page">
@@ -111,7 +131,12 @@ const InventarioTienda: React.FC = () => {
               <p><strong>Tiempo estimado:</strong> {store.estimatedTime} minutos</p>
               )}
               <p><strong>Rating:</strong> ⭐ {store.rating ?? 0}</p>
-              <p><strong>Envío:</strong> ${store.deliveryFee?.toFixed(2) ?? "0.00"}</p>
+              <p><strong>Envío:</strong>{" "} {store.deliveryFee?.toLocaleString("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }) ?? "0"}</p>
               <p><strong>Creado el:</strong> {new Date(store.createdAt || "").toLocaleDateString()}</p>
             </div>
           </div>
@@ -128,28 +153,55 @@ const InventarioTienda: React.FC = () => {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div className="inventory-grid">
-       {filteredItems.map((item) => {
-          const itemInCart = cart.items.find((ci) => ci.id === item.id);
-          const quantityValue = quantities[item.id] ?? itemInCart?.quantity ?? 1;
+      {maxPrice > minPrice && (
+        <div className="price-filter">
+          <h4>Filtrar por precio</h4>
+          <Slider
+            range
+            min={minPrice}
+            max={maxPrice}
+            step={10}
+            value={priceRange}
+            onChange={(value) => setPriceRange(value as [number, number])}
+          />
+          <div className="price-labels">
+            <span>${priceRange[0].toFixed(0)}</span>
+            <span>${priceRange[1].toFixed(0)}</span>
+          </div>
+        </div>
+      )}
+          <div className="inventory-grid">
+            <AnimatePresence>
+              {filteredItems.map((item) => {
+                const itemInCart = cart.items.find((ci) => ci.id === item.id);
+                const quantityValue = quantities[item.id] ?? itemInCart?.quantity ?? 1;
 
-          return (
-          <motion.div
-            key={item.id}
-            className="inventory-card-horizontal"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-              >
+                return (
+                  <motion.div
+                    key={item.id}
+                    className="inventory-card-horizontal"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }} 
+                    transition={{ duration: 0.3 }}
+                    layout 
+                  >
             <img
               src={item.image || defaultInventoryImage}
               alt={item.name}
               className="inventory-image-horizontal"
             />
+            
+
             <div className="inventory-info">
               <h3>{item.name}</h3>
               <p>{item.description}</p>
-              <p><strong>${item.price.toFixed(2)}</strong></p>
+              <p><strong>  {item.price.toLocaleString("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+              })} </strong></p>
               <p>{item.quantity} disponibles</p>
             </div>
                   <div className="inventory-actions-right">
@@ -224,10 +276,10 @@ const InventarioTienda: React.FC = () => {
                       )}
                     </div>
                   </motion.div>
-
-          );
-        })}
-      </div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
     </div>
   );
 };

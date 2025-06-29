@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import { orderApi } from "../api/axios";
 import "../styles/HistorialCompras.css";
 import RatingModal from "../components/RatingModal";
+import {
+  FaHourglassHalf,
+  FaStore,
+  FaTruck,
+  FaCheckCircle,
+} from "react-icons/fa";
 
 interface Order {
   id: number;
@@ -84,6 +90,21 @@ const HistorialDeCompras: React.FC = () => {
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "Pendiente":
+        return <FaHourglassHalf color="#FFA500" title="Pendiente" />;
+      case "Disponible para retiro":
+        return <FaStore color="#007BFF" title="Listo para retiro" />;
+      case "Disponible para delivery":
+        return <FaTruck color="#17A2B8" title="Listo para delivery" />;
+      case "Entregado":
+        return <FaCheckCircle color="#28a745" title="Entregado" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="historial-dashboard">
       <h1 className="historial-title">Historial de Compras</h1>
@@ -120,7 +141,7 @@ const HistorialDeCompras: React.FC = () => {
           <table>
             <thead>
             <tr>
-              <th></th> {/* columna para la flecha */}
+              
               <th>Tienda</th>
               <th>Número de orden</th>
               <th>
@@ -142,67 +163,71 @@ const HistorialDeCompras: React.FC = () => {
                 </button>
               </th>
               <th>Acción</th>
+              <th></th> 
             </tr>
           </thead>
 
             <tbody>
-  {orders.map((order) => (
-    <React.Fragment key={order.id}>
-      <tr>
-        <td>
-          <button
-            className="toggle-detail-button"
-            onClick={() =>
-              setExpandedOrderId(expandedOrderId === order.id ? null : order.id)
-            }
-          >
-            {expandedOrderId === order.id ? "▲" : "▼"}
-          </button>
-        </td>
-        <td>{order.storeName}</td>
-        <td>{order.orderNumber}</td>
-        <td>
-          {new Intl.NumberFormat("es-CL", {
-            style: "currency",
-            currency: "CLP",
-          }).format(Number(order.total))}
-        </td>
-        <td>{order.status}</td>
-        <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-        <td>
-          {order.status === "Entregado" && !order.rated ? (
-            <button
-              className="rate-button"
-              onClick={() => setSelectedOrder(order)}
-            >
-              Calificar pedido
-            </button>
-          ) : (
-            order.rated && <span className="rated-tag">Calificado</span>
-          )}
-        </td>
-      </tr>
+              {orders.map((order) => (
+                <React.Fragment key={order.id}>
+                  <tr>
+                    <td>{order.storeName}</td>
+                    <td>{order.orderNumber}</td>
+                    <td>
+                      {new Intl.NumberFormat("es-CL", {
+                        style: "currency",
+                        currency: "CLP",
+                      }).format(Number(order.total))}
+                    </td>
+                    <td className="historial-status-cell">
+                      {getStatusIcon(order.status)}
+                      <span>{order.status}</span>
+                    </td>
+                    <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      {order.status === "Entregado" && !order.rated ? (
+                        <button
+                          className="rate-button"
+                          onClick={() => setSelectedOrder(order)}
+                        >
+                          Calificar pedido
+                        </button>
+                      ) : (
+                        order.rated && <span className="rated-tag">Calificado</span>
+                      )}
+                    </td>
+                            <td>
+                      <button
+                        className="toggle-detail-button"
+                        onClick={() =>
+                          setExpandedOrderId(expandedOrderId === order.id ? null : order.id)
+                        }
+                      >
+                        {expandedOrderId === order.id ? "▲" : "▼"}
+                      </button>
+                    </td>
+                  </tr>
 
-      {expandedOrderId === order.id && (
-        <tr className="order-detail-row">
-          <td colSpan={7}>
-            <div className="order-details-expanded">
-              <h4>Detalle del pedido</h4>
-              <ul>
-                {order.items?.map((item, index) => (
-                  <li key={index}>
-                    {item.name} - {item.quantity} x ${item.price.toFixed(0)} = $
-                    {(item.price * item.quantity).toFixed(0)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </td>
-        </tr>
-      )}
-    </React.Fragment>
-  ))}
-</tbody>
+                  {expandedOrderId === order.id && (
+                    <tr className="order-detail-row">
+                      <td colSpan={7}>
+                        <div className="order-details-expanded">
+                          <h4>Detalle del pedido</h4>
+                          <ul>
+                            {order.items?.map((item, index) => (
+                              <li key={index}>
+                                {item.name} - {item.quantity} x ${item.price.toFixed(0)} = $
+                                {(item.price * item.quantity).toFixed(0)}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
           </table>
 
 

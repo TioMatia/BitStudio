@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./carritoTienda";
 import authReducer from "./auth";
+import ordenesReducer from "./ordenesSlice";
 
 const loadCart = () => {
   try {
@@ -16,6 +17,7 @@ export const store = configureStore({
   reducer: {
     cart: cartReducer,
     auth: authReducer,
+    ordenes: ordenesReducer,
   },
   preloadedState: {
     cart: loadCart(),

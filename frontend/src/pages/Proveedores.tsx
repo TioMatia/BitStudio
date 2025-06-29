@@ -85,19 +85,24 @@ const Proveedores = () => {
           <h2>Proveedores</h2>
           <button className="add-btn" onClick={() => { setEditingProvider(null); setShowForm(true); }}>+ Agregar</button>
         </div>
-        {providers.map((p) => (
-          <div key={p.id} className="proveedor-card">
-            <h4>{p.name}</h4>
-            <p><strong>Contacto:</strong> {p.contactName}</p>
-            <p><strong>Teléfono:</strong> {p.phone}</p>
-            <p><strong>Email:</strong> {p.email}</p>
-            <p><strong>Dirección:</strong> {p.address}</p>
-            <div className="acciones">
-              <button onClick={() => startEditing(p)}>Editar</button>
-              <button onClick={() => handleDelete(p.id)} className="eliminar">Eliminar</button>
+        
+        {providers.length === 0 ? (
+          <p>No hay proveedores registrados.</p>
+        ) : (
+          providers.map((p) => (
+            <div key={p.id} className="proveedor-card">
+              <h4>{p.name}</h4>
+              <p><strong>Contacto:</strong> {p.contactName}</p>
+              <p><strong>Teléfono:</strong> {p.phone}</p>
+              <p><strong>Email:</strong> {p.email}</p>
+              <p><strong>Dirección:</strong> {p.address}</p>
+              <div className="acciones">
+                <button onClick={() => startEditing(p)}>Editar</button>
+                <button onClick={() => handleDelete(p.id)} className="eliminar">Eliminar</button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {showForm && (

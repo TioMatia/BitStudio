@@ -107,7 +107,7 @@ export class OrderService {
         }
 
     const validStatuses = [
-    'pendiente',
+    'Pendiente',
     'Disponible para retiro',
     'Disponible para delivery',
     'Entregado'
@@ -119,11 +119,11 @@ export class OrderService {
 
 
     const puedeCambiar =
-    (order.status === 'pendiente' &&
+    (order.status === 'Pendiente' &&
         (newStatus === 'Disponible para retiro' || newStatus === 'Disponible para delivery')) ||
 
     ((order.status === 'Disponible para retiro' || order.status === 'Disponible para delivery') &&
-        (newStatus === 'pendiente' || newStatus === 'Entregado'));
+        (newStatus === 'Pendiente' || newStatus === 'Entregado'));
 
 
     if (!puedeCambiar) {

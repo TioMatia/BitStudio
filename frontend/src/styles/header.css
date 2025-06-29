@@ -117,3 +117,35 @@ background-color: #3678f4;
 color: white;
 border-color: #3678f4;
 }
+
+.history-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #006400;
+  border-radius: 50%;
+  animation: pop-in 0.4s ease-out;
+}
+
+.order-indicator {
+  display: inline-block;
+  margin-left: 6px;
+  width: 10px;
+  height: 10px;
+  background-color: #006400;
+  border-radius: 50%;
+  animation: pop-in 0.4s ease-out;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

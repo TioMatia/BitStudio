@@ -1,4 +1,3 @@
-// src/providers/providers.service.ts
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -37,4 +36,12 @@ async create(storeId: number, data: CreateProviderDto): Promise<Provider> {
     const result = await this.providersRepo.delete({ id, storeId });
     if (result.affected === 0) throw new NotFoundException('Proveedor no encontrado');
   }
+
+  async findById(id: number) {
+  const provider = await this.providersRepo.findOne({ where: { id } });
+  if (!provider) {
+    throw new NotFoundException('Proveedor no encontrado');
+  }
+  return provider;
+}
 }

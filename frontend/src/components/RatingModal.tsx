@@ -23,7 +23,7 @@ const RatingModal: React.FC<Props> = ({ storeName, onClose, onSubmit }) => {
   return (
     <div className="rating-modal-overlay">
       <div className="rating-modal">
-        <h2>Valorar pedido: {storeName}</h2>
+        <h2>Calificar pedido de: {storeName}</h2>
         <div className="stars">
           {[1, 2, 3, 4, 5].map((star) => (
             <span

@@ -53,7 +53,8 @@ const HistorialVendedor = () => {
   const getRatingColor = (rating: number) => {
     if (rating >= 4) return "green";
     if (rating === 3) return "orange";
-    return "red";
+    if (rating < 3 && rating > 0) return "red"
+    return "gray";
   };
 
   useEffect(() => {
@@ -70,14 +71,14 @@ const HistorialVendedor = () => {
   };
 
   const handleStatusToggle = async (order: Order) => {
-    const isPending = order.status === "pendiente";
+    const isPending = order.status === "Pendiente";
 
     const newStatus =
       isPending
         ? (order.deliveryMethod === "pickup"
             ? "Disponible para retiro"
             : "Disponible para delivery")
-        : "pendiente";
+        : "Pendiente";
 
     try {
       const res = await orderApi.patch(`/orders/${order.id}/status`, { status: newStatus });
@@ -144,7 +145,7 @@ return (
             <div className="vendedor-order-actions">
               <div
                 className={`vendedor-order-status ${
-                  order.status === "pendiente"
+                  order.status === "Pendiente"
                     ? "status-pendiente"
                     : order.status === "Entregado"
                     ? "status-entregado"
@@ -154,7 +155,7 @@ return (
                 {order.status}
               </div>
 
-              {order.status === "pendiente" ? (
+              {order.status === "Pendiente" ? (
                 <button className="vendedor-status-btn" onClick={() => handleStatusToggle(order)}>
                   {order.deliveryMethod === "pickup"
                     ? "Marcar como listo para retiro"

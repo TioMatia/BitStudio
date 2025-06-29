@@ -79,7 +79,14 @@ return (
                   <p><strong>Tiempo estimado:</strong> {store.estimatedTime} minutos</p>
                   )}
                   <span>⭐ {store.rating}</span>
-                  <span>${store.deliveryFee?.toFixed(2)} envío</span>
+                  <span>
+                    {store.deliveryFee?.toLocaleString("es-CL", {
+                      style: "currency",
+                      currency: "CLP",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }) ?? "0"}{" "}envío
+                  </span>
                 </div>
               </div>
             </motion.div>

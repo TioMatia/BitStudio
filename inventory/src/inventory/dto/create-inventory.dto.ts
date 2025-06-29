@@ -24,4 +24,9 @@ storeId: number;
 @IsOptional()
 @IsString({ message: 'La URL de imagen debe ser un texto' })
 image?: string;
+
+@IsOptional()
+@IsNumber()
+providerId?: number;
+
 }

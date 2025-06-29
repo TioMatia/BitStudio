@@ -101,7 +101,7 @@ const handleCrearOrden = async () => {
       userAddress,
       items,
       total: finalTotal,
-      status: "pendiente",
+      status: "Pendiente",
       deliveryMethod: shippingMethod,
     };
 
@@ -132,9 +132,21 @@ const handleCrearOrden = async () => {
           cart.items.map((item) => (
             <div key={item.id} className="cart-card">
               <h4>{item.name}</h4>
-              <p>Precio unitario: ${item.price.toFixed(2)}</p>
+              <p>Precio unitario: {" "} {item.price.toLocaleString("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }) }
+              </p>
               <p>Cantidad: {item.quantity}</p>
-              <p>Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
+              <p>Subtotal: {" "} {(item.price*item.quantity).toLocaleString("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }) }
+              </p>
             </div>
           ))
         )}
@@ -164,10 +176,17 @@ const handleCrearOrden = async () => {
                   checked={shippingMethod === "delivery"}
                   onChange={() => setShippingMethod("delivery")}
                 />
-                Delivery {storeData && `(+$${storeData.deliveryFee.toFixed(2)})`}
+                  Delivery: {" "} {storeData && `(+${storeData?.deliveryFee.toLocaleString("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })})`}
               </label>
             </div>
 
+
+              
             
             {shippingMethod === "delivery" && (
               <div className="address-input">
@@ -181,22 +200,32 @@ const handleCrearOrden = async () => {
             )}
 
             
-            <div className="line">
-              <span>Subtotal:</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
-            <div className="line">
-              <span>Envío:</span>
-              <span>
-                {shippingMethod === 'delivery'
-                  ? `$${storeData?.deliveryFee?.toFixed(2) || '0.00'}`
-                  : '$0.00'}
-              </span>
-            </div>
-            <div className="line total">
-              <span>Total:</span>
-              <span>${finalTotal.toFixed(2)}</span>
-            </div>
+           <div className="line">
+            <span>Subtotal:</span>
+            <span>{total.toLocaleString("es-CL", {
+              style: "currency",
+              currency: "CLP",
+              minimumFractionDigits: 0
+            })}</span>
+          </div>
+          <div className="line">
+            <span>Envío:</span>
+            <span>{shippingMethod === 'delivery'
+              ? storeData?.deliveryFee?.toLocaleString("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                  minimumFractionDigits: 0
+                }) ?? '$0'
+              : '$0'}</span>
+          </div>
+          <div className="line total">
+            <span>Total:</span>
+            <span>{finalTotal.toLocaleString("es-CL", {
+              style: "currency",
+              currency: "CLP",
+              minimumFractionDigits: 0
+            })}</span>
+          </div>
 
             
             <div className="buttons">
