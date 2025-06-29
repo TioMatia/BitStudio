@@ -18,7 +18,10 @@ border-radius: 12px;
 box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 width: 90%;
 max-width: 420px;
+max-height: 90vh;
+overflow-y: auto; 
 }
+
 
 .modal-card h3 {
 margin-bottom: 1rem;
@@ -56,7 +59,6 @@ justify-content: flex-end;
 gap: 0.8rem;
 margin-top: 1rem;
 }
-
 
 
 .button-secondary {
@@ -191,18 +193,145 @@ margin-top: 0.4rem;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-.new-category-button {
-  padding: 0.6rem 1rem;
-  background-color: #28a745;
-  border-radius: 8px;
-  border: none;
+.modal-card .new-category-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff !important;
   color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   font-family: inherit;
   transition: background-color 0.3s ease;
+  text-align: center;
+  
 }
 
-.new-category-button:hover {
-  background-color: #1e7e34;
+.modal-card .new-category-button:hover {
+  background-color: #0056b3 !important;
+}
+
+
+.selected-category-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.categories-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.category-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  user-select: none;
+  flex-grow: 1;
+}
+.category-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.selected-category-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.category-tag {
+  background-color: #e0f0ff;
+  color: #007bff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.category-tag button {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  line-height: 1;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.category-tag button:hover {
+  background: rgba(0, 123, 255, 0.1);
+}
+
+
+.category-content {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.category-item:hover {
+  background-color: #e6f0ff;
+}
+
+.category-item label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.category-item {
+  position: relative;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  display: inline-flex; /* esto es importante */
+  align-items: flex-start; /* alinea arriba */
+  width: fit-content; /* que se ajuste solo al contenido */
+  min-width: 120px; /* opcional para evitar que se colapse demasiado */
+}
+
+.delete-category-button {
+  position: absolute;
+  bottom: 35px;
+  left: 120px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.8;
+  z-index: 1; /* asegúrate de que esté por encima */
+}
+
+.delete-category-button:hover {
+  background-color: #5a6268;
+  opacity: 1;
+}
+
+.category-item:hover .delete-category-button {
+  opacity: 1;
 }

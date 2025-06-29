@@ -79,12 +79,18 @@ export class InventoryService {
       await this.verifyProvider(changes.providerId);
     }
 
-    const { categories, ...rest } = changes;
+    const { categories, categoryIds, ...rest } = changes;
     Object.assign(item, rest);
 
     if (categories) {
       const categoryEntities = await this.getOrCreateCategories(categories);
       item.categories = categoryEntities;
+    } else if (categoryIds && categoryIds.length > 0) {
+      const existingCategories = await this.categoryRepo.findByIds(categoryIds);
+      item.categories = existingCategories;
+    } else if (categoryIds && categoryIds.length === 0) {
+      
+      item.categories = [];
     }
 
     return this.inventoryRepo.save(item);

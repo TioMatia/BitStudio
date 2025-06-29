@@ -44,6 +44,7 @@ interface InventoryItem {
   quantity: number;
   image?: string;
   providerName?: string;
+categories?: { id: number; name: string }[];
 }
 
 interface Provider {
@@ -206,26 +207,28 @@ const MyStorePage: React.FC = () => {
               </div>
             )}
 
-          <div className="inventory-toolbar">
-            <div className="filter-price-range">
-              <label>Filtrar por precio:</label>
-              <Slider
-                range
-                min={minPrice}
-                max={maxPrice}
-                step={1}
-                value={priceRange}
-                onChange={(value) => setPriceRange(value as [number, number])}
-              />
-              <div className="price-labels">
-                <span>${priceRange[0].toLocaleString("es-CL")}</span>
-                <span>${priceRange[1].toLocaleString("es-CL")}</span>
-              </div>
+            <div className="inventory-toolbar">
+              {items.length > 1 && (
+                <div className="filter-price-range">
+                  <label>Filtrar por precio:</label>
+                  <Slider
+                    range
+                    min={minPrice}
+                    max={maxPrice}
+                    step={1}
+                    value={priceRange}
+                    onChange={(value) => setPriceRange(value as [number, number])}
+                  />
+                  <div className="price-labels">
+                    <span>${priceRange[0].toLocaleString("es-CL")}</span>
+                    <span>${priceRange[1].toLocaleString("es-CL")}</span>
+                  </div>
+                </div>
+              )}
+              <button onClick={() => setModalOpen(true)} className="add-product-button">
+                Agregar producto(s)
+              </button>
             </div>
-            <button onClick={() => setModalOpen(true)} className="add-product-button">
-              Agregar producto(s)
-            </button>
-          </div>
             <div className="inventory-grid">
               <AnimatePresence>
                 {items
@@ -262,6 +265,11 @@ const MyStorePage: React.FC = () => {
                             maximumFractionDigits: 0,
                           })}
                         </p>
+                        {item.categories && item.categories.length > 0 && (
+                            <p>
+                              <strong>Categorías:</strong> {item.categories.map(cat => cat.name).join(', ')}
+                            </p>
+                          )}
                         <p><strong>Cantidad:</strong> {item.quantity}</p>
                         {item.providerName && (
                           <p><strong>Proveedor:</strong> {item.providerName}</p>

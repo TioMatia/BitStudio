@@ -1,3 +1,4 @@
+// AddProductModal.tsx
 import React, { useEffect, useState } from "react";
 import { inventoryApi, storeApi } from "../api/axios";
 import axios from "axios";
@@ -56,19 +57,16 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
 
   useEffect(() => {
     if (open) {
-      // Traer proveedores
       storeApi.get(`/stores/${storeId}/providers`)
         .then(res => setProviders(res.data))
         .catch(err => console.error("Error al cargar proveedores:", err));
 
-      // Traer categorías del backend
-    inventoryApi.get(`/categories/store/${storeId}`)
-      .then(res => setCategories(res.data))
+      inventoryApi.get(`/categories/store/${storeId}`)
+        .then(res => setCategories(res.data))
         .catch(err => console.error("Error al cargar categorías:", err));
     }
   }, [open, storeId]);
 
-  // Guardar categorías seleccionadas en localStorage (opcional)
   useEffect(() => {
     localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
   }, [selectedCategories]);
@@ -86,7 +84,7 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
     try {
       const res = await inventoryApi.post("/categories", {
         name: trimmedName,
-        storeId, // Se envía el ID de la tienda
+        storeId,
       });
 
       const newCat = res.data;
@@ -98,7 +96,7 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       alert("❌ No se pudo crear la categoría.");
     }
   };
-  
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const clean = unformatCLP(input);
@@ -111,6 +109,21 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       setForm(prev => ({ ...prev, image: files[0] }));
     } else if (name !== "price") {
       setForm(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: number) => {
+    const categoryName = categories.find(c => c.id === categoryId)?.name ?? "la categoría";
+    const confirmDelete = window.confirm(`¿Estás seguro de que deseas eliminar ${categoryName}? Esta acción no se puede deshacer.`);
+    if (!confirmDelete) return;
+
+    try {
+      await inventoryApi.delete(`/categories/${categoryId}`);
+      setCategories(prev => prev.filter(cat => cat.id !== categoryId));
+      setSelectedCategories(prev => prev.filter(id => id !== categoryId));
+    } catch (error) {
+      console.error("Error al eliminar categoría:", error);
+      alert("❌ No se pudo eliminar la categoría.");
     }
   };
 
@@ -167,59 +180,61 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       <div className="modal-card">
         <h3>Agregar producto</h3>
         <form onSubmit={handleSubmit}>
-          <input
-            name="name"
-            placeholder="Nombre"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-
-          <textarea
-            name="description"
-            placeholder="Descripción"
-            value={form.description}
-            onChange={handleChange}
-          />
-
+          <input name="name" placeholder="Nombre" value={form.name} onChange={handleChange} required />
+          <textarea name="description" placeholder="Descripción" value={form.description} onChange={handleChange} />
           <div className="input-with-prefix">
-            <input
-              name="price"
-              type="text"
-              value={formatCLP(form.price)}
-              onChange={handlePriceChange}
-              placeholder="$0"
-              required
-            />
+            <input name="price" type="text" value={formatCLP(form.price)} onChange={handlePriceChange} placeholder="$0" required />
           </div>
-
-          <input
-            name="quantity"
-            type="number"
-            min="1"
-            placeholder="Cantidad"
-            value={form.quantity}
-            onChange={handleChange}
-            required
-          />
+          <input name="quantity" type="number" min="1" placeholder="Cantidad" value={form.quantity} onChange={handleChange} required />
 
           <label>Categorías:</label>
           <div className="categories-container">
-            <select
-              multiple
-              className="categories-select"
-              value={selectedCategories.map(String)}
-              onChange={(e) => {
-                const values = Array.from(e.target.selectedOptions, option => parseInt(option.value));
-                setSelectedCategories(values);
-              }}
-            >
+            <div className="categories-list">
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
+                <div key={cat.id} className="category-item">
+                  <div className="category-content">
+                    <input
+                      type="checkbox"
+                      id={`cat-${cat.id}`}
+                      value={cat.id}
+                      checked={selectedCategories.includes(cat.id)}
+                      onChange={(e) => {
+                        const id = parseInt(e.target.value);
+                        if (e.target.checked) {
+                          setSelectedCategories((prev) => [...prev, id]);
+                        } else {
+                          setSelectedCategories((prev) => prev.filter((catId) => catId !== id));
+                        }
+                      }}
+                    />
+                    <label htmlFor={`cat-${cat.id}`}>{cat.name}</label>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="delete-category-button"
+                    onClick={() => handleDeleteCategory(cat.id)}
+                    aria-label={`Eliminar categoría ${cat.name}`}
+                  >
+                    ×
+                  </button>
+                </div>
+
               ))}
-            </select>
+            </div>
+
+            <div className="selected-category-tags">
+              {selectedCategories.map((catId) => {
+                const cat = categories.find((c) => c.id === catId);
+                if (!cat) return null;
+                return (
+                  <span key={cat.id} className="category-tag removable">
+                    {cat.name}
+                    <button type="button" onClick={() => setSelectedCategories((prev) => prev.filter((id) => id !== cat.id))}>×</button>
+                  </span>
+                );
+              })}
+            </div>
 
             <div className="new-category-wrapper">
               <input
