@@ -11,6 +11,9 @@ import mpLogo from '../assets/logo_MercadoPago.png';
 import { useDispatch } from "react-redux";
 import { fetchActiveOrders } from "../store/ordenesSlice";
 import type { AppDispatch } from '../store'
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Owner {
   firstName: string;
@@ -63,7 +66,12 @@ const MyStorePage: React.FC = () => {
   const isMPLinked = !!store?.owner?.mpAccessToken;
   const [providers, setProviders] = useState<Provider[]>([]);
   const [selectedProviderId, setSelectedProviderId] = useState<number | "">( "");
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(100000);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
+  
   const dispatch = useDispatch<AppDispatch>()
+  
   const fetchStoreAndInventory = async () => {
   try {
     const res = await storeApi.get(`/stores/user/${userId}`);
@@ -85,6 +93,17 @@ const MyStorePage: React.FC = () => {
   useEffect(() => {
     if (userId) fetchStoreAndInventory();
   }, [userId]);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      const prices = items.map((item) => item.price);
+      const min = Math.floor(Math.min(...prices));
+      const max = Math.ceil(Math.max(...prices));
+      setMinPrice(min);
+      setMaxPrice(max);
+      setPriceRange([min, max]);
+    }
+  }, [items]);
 
   const handleDelete = async (item: InventoryItem) => {
     if (deletingId !== item.id) {
@@ -164,7 +183,9 @@ const MyStorePage: React.FC = () => {
               </p>
             </div>
           </div>
-            {providers.length > 0 && (
+           
+          <div className="inventory-section">
+             {providers.length > 0 && (
               <div className="filter-provider">
                 <label htmlFor="providerFilter">Filtrar por proveedor:</label>
                 <select
@@ -184,87 +205,117 @@ const MyStorePage: React.FC = () => {
                 </select>
               </div>
             )}
-          <div className="inventory-section">
+
+          <div className="inventory-toolbar">
+            <div className="filter-price-range">
+              <label>Filtrar por precio:</label>
+              <Slider
+                range
+                min={minPrice}
+                max={maxPrice}
+                step={1}
+                value={priceRange}
+                onChange={(value) => setPriceRange(value as [number, number])}
+              />
+              <div className="price-labels">
+                <span>${priceRange[0].toLocaleString("es-CL")}</span>
+                <span>${priceRange[1].toLocaleString("es-CL")}</span>
+              </div>
+            </div>
             <button onClick={() => setModalOpen(true)} className="add-product-button">
               Agregar producto(s)
             </button>
-
+          </div>
             <div className="inventory-grid">
-              {items
-                .filter((item) =>
-                  selectedProviderId === "" ? true : item.providerName && item.providerName === providers.find(p => p.id === selectedProviderId)?.name
-                )
-                .map((item) => (
-                  <div key={item.id} className="inventory-card-horizontal">
-                    <img
-                      src={item.image?.trim() ? item.image : defaultInventoryImage}
-                      alt={item.name}
-                      className="product-image-horizontal"
-                    />
-                    <div className="inventory-info">
-                      <h3>{item.name}</h3>
-                      <p>{item.description}</p>
-                      <p>
-                        <strong>Precio:</strong>{" "}
-                        {item.price.toLocaleString("es-CL", {
-                          style: "currency",
-                          currency: "CLP",
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        })}
-                      </p>
-                      <p><strong>Cantidad:</strong> {item.quantity}</p>
-                      {item.providerName && (
-                        <p><strong>Proveedor:</strong> {item.providerName}</p>
-                      )}
-                    </div>
+              <AnimatePresence>
+                {items
+                  .filter(
+                    (item) =>
+                      (selectedProviderId === "" ? true : item.providerName === providers.find(p => p.id === selectedProviderId)?.name) &&
+                      item.price >= priceRange[0] &&
+                      item.price <= priceRange[1]
+                  )
+                  .map((item) => (
+                    <motion.div
+                      key={item.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                      className="inventory-card-horizontal"
+                    >
+                      <img
+                        src={item.image?.trim() ? item.image : defaultInventoryImage}
+                        alt={item.name}
+                        className="product-image-horizontal"
+                      />
+                      <div className="inventory-info">
+                        <h3>{item.name}</h3>
+                        <p>{item.description}</p>
+                        <p>
+                          <strong>Precio:</strong>{" "}
+                          {item.price.toLocaleString("es-CL", {
+                            style: "currency",
+                            currency: "CLP",
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          })}
+                        </p>
+                        <p><strong>Cantidad:</strong> {item.quantity}</p>
+                        {item.providerName && (
+                          <p><strong>Proveedor:</strong> {item.providerName}</p>
+                        )}
+                      </div>
 
-                    <div className="inventory-actions">
-                      <button
-                        onClick={() => handleEdit(item)}
-                        className="edit-button"
-                        title="Editar"
-                      >
-                        <FaEdit />
-                      </button>
-
-                      {deletingId === item.id ? (
-                        <div className="delete-confirmation">
-                          <input
-                            type="number"
-                            min={1}
-                            max={item.quantity}
-                            value={deleteQuantity}
-                            onChange={(e) => {
-                              const val = Math.max(
-                                1,
-                                Math.min(item.quantity, Number(e.target.value))
-                              );
-                              setDeleteQuantity(val);
-                            }}
-                          />
-                          <div className="delete-buttons">
-                            <button onClick={() => handleDelete(item)} className="confirm-button">
-                              Aceptar
-                            </button>
-                            <button onClick={() => setDeletingId(null)} className="cancel-button">
-                              Cancelar
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
+                      <div className="inventory-actions">
                         <button
-                          onClick={() => handleDelete(item)}
-                          className="delete-button"
-                          title="Eliminar"
+                          onClick={() => handleEdit(item)}
+                          className="edit-button"
+                          title="Editar"
                         >
-                          <FaTrash />
+                          <FaEdit />
                         </button>
-                      )}
-                    </div>
-                  </div>
-              ))}
+
+                        {deletingId === item.id ? (
+                          <div className="delete-confirmation">
+                            <input
+                              type="number"
+                              min={1}
+                              max={item.quantity}
+                              value={deleteQuantity}
+                              onChange={(e) => {
+                                const val = Math.max(
+                                  1,
+                                  Math.min(item.quantity, Number(e.target.value))
+                                );
+                                setDeleteQuantity(val);
+                              }}
+                            />
+                            <div className="delete-buttons">
+                              <button onClick={() => handleDelete(item)} className="confirm-button">
+                                Aceptar
+                              </button>
+                              <button onClick={() => setDeletingId(null)} className="cancel-button">
+                                Cancelar
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleDelete(item)}
+                            className="delete-button"
+                            title="Eliminar"
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
             </div>
+
           </div>
         </>
       )}

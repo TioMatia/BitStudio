@@ -119,9 +119,9 @@ export class OrderController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: number,
-    @Body('status') status: string,
+    @Body() body: { status: string; comment?: string },
   ) {
-    return this.orderService.updateStatus(id, status);
+    return this.orderService.updateStatus(id, body.status, body.comment);
   }
 
   @Patch(':id/rated')

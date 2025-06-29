@@ -114,22 +114,35 @@ gap: 1rem;
   margin-top: 2rem;
 }
 
+.inventory-actions-header {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0;
+  margin-right: 4rem;
+}
+
 .add-product-button {
   background-color: #007bff;
   color: white;
-  padding: 0.75rem 1.2rem;
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 1rem;
-  transition: background-color 0.3s ease;
+  padding: 0.6rem 1.2rem;
   font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  
 }
 
-.add-product-button:hover{
-background-color: #0056b3;
+.add-product-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.add-product-button:active {
+  background-color: #004494;
+  transform: translateY(0);
 }
 
 .inventory-grid {
@@ -316,4 +329,55 @@ cursor: pointer;
 
 .inventory-info p strong {
   color: #333;
+}
+
+.filter-provider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  font-size: 1rem;
+}
+
+.filter-provider label {
+  font-weight: bold;
+  color: #333;
+}
+
+.filter-provider select {
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.filter-provider select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+.filter-price-range {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.price-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 0.5rem;
+}
+
+.inventory-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
 }

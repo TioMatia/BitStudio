@@ -103,6 +103,7 @@ const handleCrearOrden = async () => {
       total: finalTotal,
       status: "Pendiente",
       deliveryMethod: shippingMethod,
+      deliveryFee,
     };
 
     const res = await orderApi.post("/orders", dto);

@@ -99,38 +99,42 @@ export class OrderService {
     return `ORD-${datePart}-${randomPart}`;
     }
 
-    async updateStatus(id: number, newStatus: string): Promise<Order> {
-        const order = await this.orderRepository.findOne({ where: { id } });
+    async updateStatus(id: number, newStatus: string, comment?: string): Promise<Order> {
+    const order = await this.orderRepository.findOne({ where: { id } });
 
-        if (!order) {
-            throw new NotFoundException('Orden no encontrada');
-        }
+    if (!order) {
+        throw new NotFoundException('Orden no encontrada');
+    }
 
     const validStatuses = [
-    'Pendiente',
-    'Disponible para retiro',
-    'Disponible para delivery',
-    'Entregado'
-    ];   
+        'Pendiente',
+        'Disponible para retiro',
+        'Disponible para delivery',
+        'Entregado',
+        'Cancelado',
+    ];
 
-     if (!validStatuses.includes(newStatus)) {
-            throw new BadRequestException('Estado inválido');
-        }
-
+    if (!validStatuses.includes(newStatus)) {
+        throw new BadRequestException('Estado inválido');
+    }
 
     const puedeCambiar =
-    (order.status === 'Pendiente' &&
-        (newStatus === 'Disponible para retiro' || newStatus === 'Disponible para delivery')) ||
-
-    ((order.status === 'Disponible para retiro' || order.status === 'Disponible para delivery') &&
-        (newStatus === 'Pendiente' || newStatus === 'Entregado'));
-
+        (order.status === 'Pendiente' &&
+            (newStatus === 'Disponible para retiro' || newStatus === 'Disponible para delivery' || newStatus === 'Cancelado')) ||
+        ((order.status === 'Disponible para retiro' || order.status === 'Disponible para delivery') &&
+            (newStatus === 'Pendiente' || newStatus === 'Entregado'));
 
     if (!puedeCambiar) {
         throw new BadRequestException('Cambio de estado no permitido');
     }
 
     order.status = newStatus;
+
+    
+    if (newStatus === 'Cancelado' && comment) {
+        order.comment = comment;
+    }
+
     return this.orderRepository.save(order);
     }
 

@@ -41,6 +41,9 @@ createdAt: Date;
 @Column()
 deliveryMethod: 'delivery' | 'pickup';
 
+@Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+deliveryFee?: number;
+
 @Column({ type: 'int', nullable: true })
 rating?: number;
 

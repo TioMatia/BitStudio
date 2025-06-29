@@ -7,6 +7,7 @@ import {
   FaStore,
   FaTruck,
   FaCheckCircle,
+  FaTimesCircle,
 } from "react-icons/fa";
 
 interface Order {
@@ -18,6 +19,9 @@ interface Order {
   storeName: string;
   rated: boolean;
   items?: { name: string; price: number; quantity: number }[];
+  comment?: string; 
+  deliveryMethod?: "pickup" | "delivery"; 
+  deliveryFee?: number;   
 }
 
 const pageSize = 10;
@@ -34,7 +38,9 @@ const HistorialDeCompras: React.FC = () => {
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
-  
+  const [cancelCommentModalVisible, setCancelCommentModalVisible] = useState(false);
+  const [cancelComment, setCancelComment] = useState<string>("");
+
   useEffect(() => {
     const fetchOrders = async () => {
       if (!userId) return;
@@ -86,11 +92,21 @@ const HistorialDeCompras: React.FC = () => {
       setSelectedOrder(null);
     } catch (err) {
       console.error("Error al enviar valoración", err);
-      alert("❌ No se pudo enviar la valoración.");
+      alert("No se pudo enviar la valoración.");
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const openCancelCommentModal = (comment: string) => {
+  setCancelComment(comment);
+  setCancelCommentModalVisible(true);
+  };
+
+  const closeCancelCommentModal = () => {
+    setCancelCommentModalVisible(false);
+    setCancelComment("");
+  };
+
+    const getStatusIcon = (status: string) => {
     switch (status) {
       case "Pendiente":
         return <FaHourglassHalf color="#FFA500" title="Pendiente" />;
@@ -100,6 +116,8 @@ const HistorialDeCompras: React.FC = () => {
         return <FaTruck color="#17A2B8" title="Listo para delivery" />;
       case "Entregado":
         return <FaCheckCircle color="#28a745" title="Entregado" />;
+      case "Cancelado":
+        return <FaTimesCircle color="#e74c3c" title="Cancelado" />; 
       default:
         return null;
     }
@@ -166,48 +184,52 @@ const HistorialDeCompras: React.FC = () => {
               <th></th> 
             </tr>
           </thead>
-
-            <tbody>
-              {orders.map((order) => (
-                <React.Fragment key={order.id}>
-                  <tr>
-                    <td>{order.storeName}</td>
-                    <td>{order.orderNumber}</td>
-                    <td>
-                      {new Intl.NumberFormat("es-CL", {
-                        style: "currency",
-                        currency: "CLP",
-                      }).format(Number(order.total))}
-                    </td>
-                    <td className="historial-status-cell">
-                      {getStatusIcon(order.status)}
-                      <span>{order.status}</span>
-                    </td>
-                    <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                    <td>
-                      {order.status === "Entregado" && !order.rated ? (
-                        <button
-                          className="rate-button"
-                          onClick={() => setSelectedOrder(order)}
-                        >
-                          Calificar pedido
-                        </button>
-                      ) : (
-                        order.rated && <span className="rated-tag">Calificado</span>
-                      )}
-                    </td>
-                            <td>
+          <tbody>
+            {orders.map((order) => (
+              <React.Fragment key={order.id}>
+                <tr>
+                  <td>{order.storeName}</td>
+                  <td>{order.orderNumber}</td>
+                  <td>
+                    {new Intl.NumberFormat("es-CL", {
+                      style: "currency",
+                      currency: "CLP",
+                    }).format(Number(order.total))}
+                  </td>
+                  <td className="historial-status-cell">
+                    {getStatusIcon(order.status)} <span>{order.status}</span>
+                  </td>
+                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    {order.status === "Entregado" && !order.rated ? (
                       <button
-                        className="toggle-detail-button"
-                        onClick={() =>
-                          setExpandedOrderId(expandedOrderId === order.id ? null : order.id)
-                        }
+                        className="rate-button"
+                        onClick={() => setSelectedOrder(order)}
                       >
-                        {expandedOrderId === order.id ? "▲" : "▼"}
+                        Calificar pedido
                       </button>
-                    </td>
-                  </tr>
-
+                    ) : order.rated ? (
+                      <span className="rated-tag">Calificado</span>
+                    ) : order.status === "Cancelado" && order.comment ? (
+                      <button
+                        className="view-cancel-comment-btn"
+                        onClick={() => openCancelCommentModal(order.comment!)}
+                      >
+                        Ver motivo de cancelación
+                      </button>
+                    ) : null}
+                  </td>
+                  <td>
+                    <button
+                      className="toggle-detail-button"
+                      onClick={() =>
+                        setExpandedOrderId(expandedOrderId === order.id ? null : order.id)
+                      }
+                    >
+                      {expandedOrderId === order.id ? "▲" : "▼"}
+                    </button>
+                  </td>
+                </tr>
                   {expandedOrderId === order.id && (
                     <tr className="order-detail-row">
                       <td colSpan={7}>
@@ -216,21 +238,52 @@ const HistorialDeCompras: React.FC = () => {
                           <ul>
                             {order.items?.map((item, index) => (
                               <li key={index}>
-                                {item.name} - {item.quantity} x ${item.price.toFixed(0)} = $
-                                {(item.price * item.quantity).toFixed(0)}
+                                {item.name} - {item.quantity} x{" "}
+                                {new Intl.NumberFormat("es-CL", {
+                                  style: "currency",
+                                  currency: "CLP",
+                                }).format(item.price)} ={" "}
+                                {new Intl.NumberFormat("es-CL", {
+                                  style: "currency",
+                                  currency: "CLP",
+                                }).format(item.price * item.quantity)}
                               </li>
                             ))}
+                          
+                           {order.deliveryMethod === "delivery" && order.deliveryFee && (
+                          
+                            <p>
+                              <li>
+                              <strong>Costo de delivery:</strong>{" "}
+                              {new Intl.NumberFormat("es-CL", {
+                                style: "currency",
+                                currency: "CLP",
+                              }).format(order.deliveryFee)}
+                              </li>
+                            </p>
+                          )}
+                          
                           </ul>
+
                         </div>
                       </td>
                     </tr>
                   )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
-
-
+              </React.Fragment>
+            ))}
+          </tbody>
+            {cancelCommentModalVisible && (
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <h3>Motivo de cancelación</h3>
+                  <p>{cancelComment}</p>
+                  <button onClick={closeCancelCommentModal} className="modal-close-btn">
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+            )}
+        </table>
           <div className="historial-pagination">
             <button
               disabled={currentPage === 1}

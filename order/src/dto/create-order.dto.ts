@@ -4,11 +4,12 @@ export class OrderItemDto {
 }
 
 export class CreateOrderDto {
-storeName: string;
-storeAddress: string;
-userAddress: string;
-items: OrderItemDto[];
-total: number;
-status: string;
-deliveryMethod: 'delivery' | 'pickup';
+  storeName: string;
+  storeAddress: string;
+  userAddress: string;
+  items: OrderItemDto[];
+  total: number;
+  status: string;
+  deliveryMethod: 'delivery' | 'pickup';
+  deliveryFee?: number;
 }

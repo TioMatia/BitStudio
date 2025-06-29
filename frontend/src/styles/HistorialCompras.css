@@ -187,3 +187,54 @@
   color: #333;
 }
 
+.view-cancel-comment-btn {
+  border: none;
+  background-color: #f8d7da;  
+  color: #842029;             
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.view-cancel-comment-btn:hover {
+  background-color: #842029;  
+  color: #fff;
+}
+
+.modal-close-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background-color: #0056b3; 
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 25px 30px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}

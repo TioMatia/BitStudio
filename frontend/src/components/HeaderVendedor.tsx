@@ -40,7 +40,7 @@ const HeaderVendedor: React.FC = () => {
         {currentPath !== "/seller/historial" && (
           <div className="indicator-wrapper">
             <button className="provider-button" onClick={() => navigate("/seller/historial")}>
-              Historial Ventas
+              Ventas
             </button>
             {hasActiveOrders && <span className="order-indicator" />}
           </div>
