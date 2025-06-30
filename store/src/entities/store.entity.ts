@@ -24,6 +24,9 @@ export class Store {
   @Column({ nullable: true })
   image: string;
 
+  @Column({ type: 'varchar', length: 10, default: 'pickup' })
+  shippingMethod: 'delivery' | 'pickup' | 'both';
+
   @Column({ type: 'float', default: 0 })
   deliveryFee: number;
 

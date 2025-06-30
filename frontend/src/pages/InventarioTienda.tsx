@@ -44,6 +44,7 @@ interface Store {
   phone?: string; 
   score?: number;
   createdAt?: string;
+  shippingMethod?: "pickup" | "delivery" | "both";
 }
 
 
@@ -64,6 +65,19 @@ const InventarioTienda: React.FC = () => {
 
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
+
+  const getShippingMethodText = (method: string | undefined) => {
+    switch (method) {
+      case "delivery":
+        return "Solo delivery";
+      case "pickup":
+        return "Solo retiro en tienda";
+      case "both":
+        return "Delivery y retiro en tienda";
+      default:
+        return "No especificado";
+    }
+  };
 
     useEffect(() => {
     const fetchInventory = async () => {
@@ -148,16 +162,23 @@ const InventarioTienda: React.FC = () => {
               )}
               <p><strong>Ubicación:</strong> {store.location}</p>
               {store.phone && <p><strong>Teléfono:</strong> {store.phone}</p>}
-              {store.estimatedTime && (
-              <p><strong>Tiempo estimado:</strong> {store.estimatedTime} minutos</p>
-              )}
               <p><strong>Rating:</strong> ⭐ {store.rating ?? 0}</p>
-              <p><strong>Envío:</strong>{" "} {store.deliveryFee?.toLocaleString("es-CL", {
-                  style: "currency",
-                  currency: "CLP",
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                }) ?? "0"}</p>
+              <p><strong>Método de envío:</strong> {getShippingMethodText(store.shippingMethod)}</p>
+              {(store.shippingMethod === "delivery" || store.shippingMethod === "both") && (
+                <>
+                  {store.estimatedTime && (
+                    <p><strong>Tiempo estimado:</strong> {store.estimatedTime} minutos</p>
+                  )}
+                  <p><strong>Envío:</strong>{" "} 
+                    {store.deliveryFee?.toLocaleString("es-CL", {
+                      style: "currency",
+                      currency: "CLP",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }) ?? "0"}
+                  </p>
+                </>
+              )}
               <p><strong>Creado el:</strong> {new Date(store.createdAt || "").toLocaleDateString()}</p>
             </div>
           </div>

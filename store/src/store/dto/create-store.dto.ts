@@ -37,5 +37,6 @@ rating?: number;
 @IsString()
 estimatedTime?: string;
 
+shippingMethod: 'delivery' | 'pickup' | 'both';
 
 }

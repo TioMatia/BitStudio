@@ -34,6 +34,7 @@ interface Store {
   estimatedTime?: string;
   score?: number;
   owner?: Owner;
+  shippingMethod?: "pickup" | "delivery" | "both";
 }
 
 interface InventoryItem {
@@ -44,7 +45,7 @@ interface InventoryItem {
   quantity: number;
   image?: string;
   providerName?: string;
-categories?: { id: number; name: string }[];
+  categories?: { id: number; name: string }[];
 }
 
 interface Provider {
@@ -166,6 +167,20 @@ const MyStorePage: React.FC = () => {
     window.location.href = authUrl;
   };
 
+  const getShippingMethodText = (method: string | undefined) => {
+    switch (method) {
+      case "delivery":
+        return "Solo delivery";
+      case "pickup":
+        return "Solo retiro en tienda";
+      case "both":
+        return "Delivery y retiro en tienda";
+      default:
+        return "No especificado";
+    }
+  };
+
+
   return (
     <div className="my-store-page">
       <h2>Mi Tienda</h2>
@@ -194,17 +209,24 @@ const MyStorePage: React.FC = () => {
               <p><strong>Ubicación:</strong> {store.location}</p>
               {store.phone && <p><strong>Teléfono:</strong> {store.phone}</p>}
               {store.description && <p><strong>Descripción:</strong> {store.description}</p>}
-              {store.estimatedTime && <p><strong>Tiempo estimado:</strong> {store.estimatedTime}</p>}
               <p><strong>Rating:</strong> ⭐ {store.rating ?? 0}</p>
-              <p>
-                <strong>Envío:</strong>{" "}
-                {store.deliveryFee?.toLocaleString("es-CL", {
-                  style: "currency",
-                  currency: "CLP",
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                }) ?? "$0"}
-              </p>
+              <p><strong>Método de envío:</strong> {getShippingMethodText(store.shippingMethod)}</p>
+
+              {(store.shippingMethod === "delivery" || store.shippingMethod === "both") && (
+                <>
+                  {store.estimatedTime && (
+                    <p><strong>Tiempo estimado:</strong> {store.estimatedTime} minutos</p>
+                  )}
+                  <p><strong>Envío:</strong>{" "} 
+                    {store.deliveryFee?.toLocaleString("es-CL", {
+                      style: "currency",
+                      currency: "CLP",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }) ?? "0"}
+                  </p>
+                </>
+              )}
             </div>
           </div>
            

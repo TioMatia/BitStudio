@@ -80,3 +80,60 @@ box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 background: var(--secondary);
 box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
+
+.create-form .field label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.create-form .field input[type="radio"] {
+  transform: translateY(1px);
+  margin: 0;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.create-form .field label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  white-space: nowrap; 
+  width: 100%;
+}
+
+.select-crear-tienda{
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: var(--input-bg);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.select-crear-tienda:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #fff;
+}

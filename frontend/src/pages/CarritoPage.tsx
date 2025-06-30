@@ -12,6 +12,7 @@ interface Store {
   deliveryFee: number;
   userId: number;
   location: string;
+  shippingMethod: "pickup" | "delivery" | "both";
 }
 
 const CarritoPage: React.FC = () => {
@@ -38,7 +39,10 @@ const CarritoPage: React.FC = () => {
     fetchStore();
   }, [cart.storeId]);
 
-
+  useEffect(() => {
+    if (storeData?.shippingMethod === "pickup") setShippingMethod("pickup");
+    else setShippingMethod("delivery"); 
+  }, [storeData]);
 
 
   const handleClearCart = () => {
@@ -185,37 +189,61 @@ const handleCrearOrden = async () => {
         {cart.items.length > 0 && (
           <div className="cart-summary">
             <h3>Resumen del Pedido</h3>
+            {storeData?.shippingMethod === "both" && (
+              <div className="shipping-method">
+                <h4>Método de envío:</h4>
+                <label>
+                  <input
+                    type="radio"
+                    name="shipping"
+                    value="pickup"
+                    checked={shippingMethod === "pickup"}
+                    onChange={() => setShippingMethod("pickup")}
+                  />
+                  Retiro en tienda
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="shipping"
+                    value="delivery"
+                    checked={shippingMethod === "delivery"}
+                    onChange={() => setShippingMethod("delivery")}
+                  />
+                  Delivery: {" "}
+                  {storeData && `(+${storeData.deliveryFee.toLocaleString("es-CL", {
+                    style: "currency",
+                    currency: "CLP",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })})`}
+                </label>
+              </div>
+            )}
 
+            {storeData?.shippingMethod === "pickup" && (
+              <div className="shipping-method">
+                <h4>Método de envío:</h4>
+                <p>Solo retiro en tienda</p>
+              </div>
+            )}
+
+            {storeData?.shippingMethod === "delivery" && (
+              <div className="shipping-method">
+                <h4>Método de envío:</h4>
+                <p>
+                  Delivery disponible (+{storeData.deliveryFee.toLocaleString("es-CL", {
+                    style: "currency",
+                    currency: "CLP",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })})
+                </p>
+              </div>
+            )}       
             
-            <div className="shipping-method">
-              <h4>Método de envío:</h4>
-              <label>
-                <input
-                  type="radio"
-                  name="shipping"
-                  value="pickup"
-                  checked={shippingMethod === "pickup"}
-                  onChange={() => setShippingMethod("pickup")}
-                />
-                Retiro en tienda
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="shipping"
-                  value="delivery"
-                  checked={shippingMethod === "delivery"}
-                  onChange={() => setShippingMethod("delivery")}
-                />
-                  Delivery: {" "} {storeData && `(+${storeData?.deliveryFee.toLocaleString("es-CL", {
-                  style: "currency",
-                  currency: "CLP",
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                })})`}
-              </label>
-            </div>          
-            {shippingMethod === "delivery" && (
+          {(storeData?.shippingMethod === "delivery" || storeData?.shippingMethod === "both") &&
+            shippingMethod === "delivery" && (
               <div className="address-input">
                 <label>Dirección de entrega:</label>
                 <input
@@ -224,7 +252,7 @@ const handleCrearOrden = async () => {
                   onChange={(e) => setUserAddress(e.target.value)}
                 />
               </div>
-            )}
+          )}
 
             
            <div className="line">

@@ -20,15 +20,15 @@ const HeaderVendedor: React.FC = () => {
     }
   }, [dispatch, storeId]);
 
-const handleLogout = () => {
-  const confirmLogout = window.confirm("¿Estás seguro de que quieres cerrar sesión?");
-  if (!confirmLogout) return;
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("¿Estás seguro de que quieres cerrar sesión?");
+    if (!confirmLogout) return;
 
-  localStorage.removeItem("token");
-  localStorage.removeItem("role");
-  localStorage.removeItem("userId");
-  navigate("/login");
-};
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+    navigate("/login");
+  };
 
   return (
     <div className="header-container">

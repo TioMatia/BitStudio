@@ -18,6 +18,7 @@ const CrearTiendaPage: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
+  const [shippingMethod, setShippingMethod] = useState<"delivery" | "pickup" | "both">("pickup");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,7 +49,7 @@ const CrearTiendaPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId) {
-      alert("⚠️ No se encontró el usuario logueado.");
+      alert("No se encontró el usuario logueado.");
       return;
     }
 
@@ -65,12 +66,13 @@ const CrearTiendaPage: React.FC = () => {
         estimatedTime: form.estimatedTime || undefined,
         userId: parseInt(userId),
         owner: userId.toString(),
-        rating: 0
+        rating: 0,
+        shippingMethod, 
       });
 
       navigate("/seller/mystore", { replace: true });
     } catch (err: any) {
-      console.error("❌ Error al crear tienda:", err.response?.data || err);
+      console.error("Error al crear tienda:", err.response?.data || err);
     }
   };
 
@@ -99,14 +101,42 @@ const CrearTiendaPage: React.FC = () => {
         <span>Imagen de la tienda (opcional)</span>
         <input type="file" accept="image/*" onChange={handleImageChange} />
       </div>
-      <div className="field">
-        <span>Costo de envío (opcional)</span>
-        <input type="number" name="deliveryFee" min="0" step="0.01" value={form.deliveryFee} onChange={handleChange} />
-      </div>
-      <div className="field">
-        <span>Tiempo estimado en minutos (opcional)</span>
-        <input name="estimatedTime" value={form.estimatedTime} onChange={handleChange} />
-      </div>
+          <div className="field">
+            <span>Método de envío</span>
+            <select
+              name="shippingMethod"
+              value={shippingMethod}
+              onChange={(e) => setShippingMethod(e.target.value as "pickup" | "delivery" | "both")}
+              className="select-crear-tienda"
+            >
+              <option value="pickup">Solo retiro en tienda</option>
+              <option value="delivery">Solo delivery</option>
+              <option value="both">Ambos (retiro y delivery)</option>
+            </select>
+          </div>
+        {(shippingMethod === "delivery" || shippingMethod === "both") && (
+          <>
+            <div className="field">
+              <span>Costo de envío (opcional)</span>
+              <input
+                type="number"
+                name="deliveryFee"
+                min="0"
+                step="0.01"
+                value={form.deliveryFee}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="field">
+              <span>Tiempo estimado en minutos (opcional)</span>
+              <input
+                name="estimatedTime"
+                value={form.estimatedTime}
+                onChange={handleChange}
+              />
+            </div>
+          </>
+        )}
       <button type="submit" className="button button-primary">
         <FaStore className="icon" />
         Crear tienda
