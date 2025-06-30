@@ -237,6 +237,7 @@ const InventarioTienda: React.FC = () => {
                 )}
               </div>
             )}
+             {/* Filtrar por precio */}
             <div className="sort-dropdown">
               <label htmlFor="sortOrder">Ordenar por:</label>
               <select

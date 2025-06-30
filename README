@@ -1,0 +1,3 @@
+Es necesario tener docker instalado
+paso 1:
+escribir en consola : docker-compose up --build

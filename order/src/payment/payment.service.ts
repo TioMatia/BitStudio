@@ -103,7 +103,7 @@ async handleOAuth(code: string, userId: string) {
     const accessToken = response.data.access_token;
     const mpUserId = response.data.user_id;
 
-    // Buscar y actualizar el usuario
+    
     const user = await this.userRepository.findOne({
   where: { id: Number(userId) }, 
 });

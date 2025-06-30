@@ -23,9 +23,23 @@ import AdminLayout from "./layouts/AdminLayout";
 import PrivateRouteAdmin from "./Restricciones/PrivateRouteAdmin";
 import HistorialDeCompras from './pages/HistorialDeCompras';
 import AdminInventoryPage from './pages/Admin/AdminInventoryPage';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { setCredentials } from './store/auth';
 
 function App() {
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userString = localStorage.getItem("user");
+    if (token && userString) {
+      const user = JSON.parse(userString);
+      dispatch(setCredentials({ user, token }));
+    }
+  }, [dispatch]);
+  
   return (
     
     <Routes>

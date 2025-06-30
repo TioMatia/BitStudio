@@ -1,4 +1,3 @@
-// AddProductModal.tsx
 import React, { useEffect, useState } from "react";
 import { inventoryApi, storeApi } from "../api/axios";
 import axios from "axios";

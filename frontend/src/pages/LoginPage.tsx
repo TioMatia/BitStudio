@@ -24,6 +24,7 @@ const LoginPage: React.FC = () => {
       localStorage.setItem("token", access_token);
       localStorage.setItem("role", user.role);
       localStorage.setItem("userId", user.id);
+      localStorage.setItem("user", JSON.stringify(user));
 
     
       dispatch(setCredentials({ user, token: access_token }));

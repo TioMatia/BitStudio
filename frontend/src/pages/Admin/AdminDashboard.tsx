@@ -43,8 +43,6 @@ const AdminDashboard = () => {
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
-
-  // Órdenes
   const [currentPageOrders, setCurrentPageOrders] = useState(1);
   const [totalPagesOrders, setTotalPagesOrders] = useState(1);
   const [ventasPorTienda, setVentasPorTienda] = useState<{ storeId: number, ventas: number }[]>([]);
@@ -53,7 +51,7 @@ const AdminDashboard = () => {
     cantidadOrdenes: 0,
     promedio: 0,
   });
-  // Resumen clientes
+  
   const [resumenPorCliente, setResumenPorCliente] = useState<ClienteResumen[]>([]);
   const [currentPageClientes, setCurrentPageClientes] = useState(1);
   const [sortKey, setSortKey] = useState<keyof ClienteResumen>("cantidadOrdenes");

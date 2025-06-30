@@ -1,6 +1,6 @@
 .header-container {
   display: flex;
-  justify-content: space-between; /* separa el título a la izquierda y el carrito a la derecha */
+  justify-content: space-between; 
   align-items: center;
   padding: 1rem 2rem;
   background-color: #000000;

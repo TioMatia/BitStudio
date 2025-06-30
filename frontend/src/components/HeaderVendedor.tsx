@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../store";
 import { fetchActiveOrders } from "../store/ordenesSlice"; 
+import { FaUserCircle } from "react-icons/fa";
 import "../styles/header.css";
 
 const HeaderVendedor: React.FC = () => {
@@ -12,6 +13,7 @@ const HeaderVendedor: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const hasActiveOrders = useSelector((state: RootState) => state.ordenes.hasActiveOrders);
+  const user = useSelector((state: RootState) => state.auth.user);
   const storeId = localStorage.getItem("storeId");
 
   useEffect(() => {
@@ -27,6 +29,9 @@ const HeaderVendedor: React.FC = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
+    localStorage.removeItem("user");
+    localStorage.removeItem("storeId");
+
     navigate("/login");
   };
 
@@ -34,6 +39,13 @@ const HeaderVendedor: React.FC = () => {
     <div className="header-container">
       <div className="header-title">BITSTUDIO</div>
       <div className="header-actions">
+        {user && (
+          <div className="user-info">
+            <FaUserCircle className="user-icon" />
+            <span className="user-name">{user.firstName}</span>
+          </div>
+        )}
+
         {currentPath !== "/seller/mystore" && (
           <button className="provider-button" onClick={() => navigate("/seller/mystore")}>
             Mi Tienda
@@ -52,7 +64,9 @@ const HeaderVendedor: React.FC = () => {
             Administrar Proveedores
           </button>
         )}
+
         <div className="vertical-separator" />
+
         <button className="logout-button" onClick={handleLogout}>
           Cerrar sesión
         </button>

@@ -301,10 +301,10 @@ margin-top: 0.4rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
-  display: inline-flex; /* esto es importante */
-  align-items: flex-start; /* alinea arriba */
-  width: fit-content; /* que se ajuste solo al contenido */
-  min-width: 120px; /* opcional para evitar que se colapse demasiado */
+  display: inline-flex; 
+  align-items: flex-start; 
+  width: fit-content; 
+  min-width: 120px; 
 }
 
 .delete-category-button {
@@ -324,7 +324,7 @@ margin-top: 0.4rem;
   cursor: pointer;
   padding: 0;
   opacity: 0.8;
-  z-index: 1; /* asegúrate de que esté por encima */
+  z-index: 1; 
 }
 
 .delete-category-button:hover {
