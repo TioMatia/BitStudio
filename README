@@ -1,3 +1,70 @@
-Es necesario tener docker instalado
-paso 1:
-escribir en consola : docker-compose up --build
+
+------¿Cómo levantar el proyecto en mi maquina?---------
+
+Paso 1:
+Tener Docker instalado, si no lo tienes descargalo e instalalo
+
+Paso 2:
+Escribir en consola:
+
+docker-compose up --build
+
+Ese comando levantará el proyecto localmente.
+
+Paso 3:
+Ve a tu navegador y escribe en la barra de navegación:
+
+http://localhost:5173
+
+Con esto ya estará funcionando la página.
+
+
+----------Usuarios creados:-------------
+
+Compradores:
+
+    Correo: comprador@comprador.com
+    Contraseña: comprador123
+
+    Correo: compradora@compradora.com
+    Contraseña: comprador123
+
+Vendedores:
+
+   -Dueño de Panaderia
+    Correo: pedro@vendedor.com
+    Contraseña: vendedor123
+    
+   -Dueña de Heladeria
+    Correo: maria@vendedor.com
+    Contraseña: vendedor 123
+    
+   -Dueño de Pasteleria
+    Correo: matias@vendedor.com
+    Contraseña: vendedor 123
+    
+   -Dueña de Almacen de Carolina
+    Correo: carolina@vendedor.com
+    Contraseña: vendedor 123
+    
+   -Dueño de Kiosko 
+    Correo: jose@vendedor.com
+    Contraseña: vendedor 123
+    
+    Correo: veronica@vendedor.com
+    Contraseña: vendedor 123
+    
+    Correo: nicolas@vendedor.com
+    Contraseña: vendedor 123
+    
+    Correo: camila@vendedor.com
+    Contraseña: vendedor 123
+    
+    Correo: benjamin@vendedor.com
+    Contraseña: vendedor 123
+
+
+
+Admin:
+    Correo: admin@admin.com
+    Contraseña:  admin123
