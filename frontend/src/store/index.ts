@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./carritoTienda";
 import authReducer from "./auth";
 import ordenesReducer from "./ordenesSlice";
+import activeOrdersReducer from "./activeOrdersSlice";
 
 const loadCart = () => {
   try {
@@ -18,6 +19,7 @@ export const store = configureStore({
     cart: cartReducer,
     auth: authReducer,
     ordenes: ordenesReducer,
+    activeOrders: activeOrdersReducer,
   },
   preloadedState: {
     cart: loadCart(),

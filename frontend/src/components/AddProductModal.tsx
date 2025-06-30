@@ -93,7 +93,7 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       setNewCategoryName("");
     } catch (error) {
       console.error("Error al crear categoría:", error);
-      alert("❌ No se pudo crear la categoría.");
+      alert("No se pudo crear la categoría.");
     }
   };
 
@@ -123,7 +123,7 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
       setSelectedCategories(prev => prev.filter(id => id !== categoryId));
     } catch (error) {
       console.error("Error al eliminar categoría:", error);
-      alert("❌ No se pudo eliminar la categoría.");
+      alert("No se pudo eliminar la categoría.");
     }
   };
 
@@ -134,7 +134,7 @@ const AddProductModal: React.FC<Props> = ({ open, onClose, storeId, onProductAdd
     const quantityNumber = parseInt(form.quantity);
 
     if (priceNumber < 0 || quantityNumber < 0) {
-      alert("❌ Precio o cantidad no pueden ser negativos.");
+      alert("Precio o cantidad no pueden ser negativos.");
       return;
     }
 

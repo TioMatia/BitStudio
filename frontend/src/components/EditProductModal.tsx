@@ -131,7 +131,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ open, onClose, prod
     const quantityNumber = parseInt(form.quantity);
 
     if (priceNumber < 0 || quantityNumber < 0) {
-      alert("❌ Precio o cantidad no pueden ser negativos.");
+      alert("Precio o cantidad no pueden ser negativos.");
       return;
     }
 
@@ -159,7 +159,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ open, onClose, prod
       onProductUpdated();
       onClose();
     } catch (err) {
-      console.error("❌ Error al actualizar producto:", err);
+      console.error("Error al actualizar producto:", err);
     }
   };
 

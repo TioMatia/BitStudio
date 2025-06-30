@@ -28,7 +28,7 @@ useEffect(() => {
       const res = await storeApi.get("/stores");
       setStores(res.data);
     } catch (err: any) {
-      console.error("❌ Error al obtener tiendas:", err);
+      console.error("Error al obtener tiendas:", err);
       setError("Error al cargar tiendas. Intenta nuevamente.");
     }
   };

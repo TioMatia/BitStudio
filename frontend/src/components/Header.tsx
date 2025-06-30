@@ -11,34 +11,7 @@ const Header: React.FC = () => {
   const currentPath = location.pathname;
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
-  const [hasActiveOrders, setHasActiveOrders] = useState(false);
-
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) return;
-
-    const fetchActiveOrders = async () => {
-      try {
-        const res = await orderApi.get(`/orders/user/${userId}`, {
-          params: {
-            limit: 5,
-          },
-        });
-
-        const orders = res.data.data || [];
-
-        const hasActive = orders.some((order: any) =>
-          ["Pendiente", "Disponible para retiro", "Disponible para delivery"].includes(order.status)
-        );
-
-        setHasActiveOrders(hasActive);
-      } catch (err) {
-        console.error("❌ Error al verificar órdenes activas:", err);
-      }
-    };
-
-    fetchActiveOrders();
-  }, []);
+  const hasActiveOrders = useSelector((state: RootState) => state.activeOrders.hasActiveOrders);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("¿Estás seguro de que quieres cerrar sesión?");

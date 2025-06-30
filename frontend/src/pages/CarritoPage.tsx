@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../store";
+import type { RootState,AppDispatch } from "../store";
 import { clearCart,setItemQuantity, removeItem  } from "../store/carritoTienda";
 import { storeApi, orderApi } from "../api/axios";
 import "../styles/carrito.css";
+import { fetchActiveOrders } from "../store/activeOrdersSlice";
 
 
 interface Store {
@@ -17,7 +18,7 @@ interface Store {
 
 const CarritoPage: React.FC = () => {
   const cart = useSelector((state: RootState) => state.cart);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [shippingMethod, setShippingMethod] = useState<"delivery" | "pickup">("delivery");
   const [userAddress, setUserAddress] = useState("");
@@ -114,8 +115,11 @@ const handleCrearOrden = async () => {
       deliveryFee,
     };
 
+
     const res = await orderApi.post("/orders", dto);
     alert(`Orden creada exitosamente\nNúmero de orden: ${res.data.order.orderNumber}`);
+    const userId = user?.id;
+    if (userId) dispatch(fetchActiveOrders(userId.toString()));
     dispatch(clearCart());
   } catch (err) {
     console.error("Error al crear orden:", err);

@@ -5,13 +5,15 @@ import { authApi, storeApi } from "../api/axios";
 import { loadCart } from "../store/carritoTienda";
 import { setCredentials } from "../store/auth"; 
 import "../styles/login.css";
+import { fetchActiveOrders } from "../store/activeOrdersSlice";
+import type { AppDispatch } from "../store"
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +30,9 @@ const LoginPage: React.FC = () => {
 
    
       dispatch(loadCart());
-
+      if (user.role === "comprador") {
+        dispatch(fetchActiveOrders(user.id));
+      }
     
       switch (user.role) {
         case "admin":

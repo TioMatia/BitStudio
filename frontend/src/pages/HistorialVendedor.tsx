@@ -33,7 +33,7 @@ const HistorialVendedor = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Estado modal cancelar
+ 
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
   const [selectedOrderToCancel, setSelectedOrderToCancel] = useState<Order | null>(null);
   const [cancelReason, setCancelReason] = useState("");
@@ -94,7 +94,7 @@ const HistorialVendedor = () => {
       );
     } catch (err) {
       console.error("Error al cambiar el estado:", err);
-      alert("❌ No se pudo actualizar el estado.");
+      alert("No se pudo actualizar el estado.");
     }
   };
 
@@ -109,25 +109,25 @@ const HistorialVendedor = () => {
       );
     } catch (err) {
       console.error("Error al marcar como Entregado:", err);
-      alert("❌ No se pudo actualizar el estado.");
+      alert("No se pudo actualizar el estado.");
     }
   };
 
-  // Abrir modal cancelar
+ 
   const openCancelModal = (order: Order) => {
     setSelectedOrderToCancel(order);
     setCancelReason("");
     setCancelModalVisible(true);
   };
 
-  // Cerrar modal
+
   const closeCancelModal = () => {
     setCancelModalVisible(false);
     setSelectedOrderToCancel(null);
     setCancelReason("");
   };
 
-  // Confirmar cancelación
+ 
   const confirmCancelOrder = async () => {
     if (!cancelReason.trim()) {
       alert("Por favor ingresa el motivo de cancelación.");
@@ -148,7 +148,7 @@ const HistorialVendedor = () => {
       closeCancelModal();
     } catch (err) {
       console.error("Error al cancelar el pedido:", err);
-      alert("❌ No se pudo cancelar el pedido.");
+      alert("No se pudo cancelar el pedido.");
     }
   };
 
