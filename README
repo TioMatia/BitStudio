@@ -51,15 +51,19 @@ Vendedores:
     Correo: jose@vendedor.com
     Contraseña: vendedor 123
     
+   -Dueña de Pizzeria 
     Correo: veronica@vendedor.com
     Contraseña: vendedor 123
     
+   -Dueña de Tienda de telas 
     Correo: nicolas@vendedor.com
     Contraseña: vendedor 123
     
+   -Dueña de Tienda de tecnologia 
     Correo: camila@vendedor.com
     Contraseña: vendedor 123
     
+   -Dueño de Libreria 
     Correo: benjamin@vendedor.com
     Contraseña: vendedor 123
 
@@ -68,3 +72,4 @@ Vendedores:
 Admin:
     Correo: admin@admin.com
     Contraseña:  admin123
+
