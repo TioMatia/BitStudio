@@ -210,3 +210,16 @@ flex: 1;
   font-weight: 500;
   color: var(--text-dark);
 }
+.delete-store-button{
+  margin-top: 0.5rem;
+  background-color: #dc3545;
+  color: white;
+  border: none; 
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.delete-store-button:hover{
+  background-color: #800310;
+}

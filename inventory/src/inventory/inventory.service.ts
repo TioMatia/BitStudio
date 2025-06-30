@@ -162,4 +162,10 @@ export class InventoryService {
     });
   }
 
+    async deleteByStoreId(storeId: number): Promise<{ message: string }> {
+    await this.inventoryRepo.delete({ storeId });
+    return { message: `Inventario de la tienda ${storeId} eliminado` };
+  }
+
+
 }

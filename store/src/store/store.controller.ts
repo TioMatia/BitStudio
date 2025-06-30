@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Patch, Delete } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 
@@ -40,4 +40,10 @@ async updateRating(
 incrementSales(@Param('id') id: number) {
   return this.storeService.incrementSales(id);
 }
+
+@Delete(':id')
+remove(@Param('id') id: number) {
+  return this.storeService.remove(+id);
+}
+
 }

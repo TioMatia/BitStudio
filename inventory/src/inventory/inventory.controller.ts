@@ -40,9 +40,14 @@ export class InventoryController {
   }
 
   
-
+  @Delete('/store/:storeId')
+  deleteByStoreId(@Param('storeId') storeId: number) {
+    return this.inventoryService.deleteByStoreId(+storeId);
+  }
+  
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.inventoryService.remove(id);
   }
+
 }

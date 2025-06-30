@@ -146,3 +146,41 @@
 .sort-button:hover {
   color: #000;
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.pagination button {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #3730a3;
+  transform: scale(1.05);
+}
+
+.pagination button:disabled {
+  background-color: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination span {
+  font-size: 0.95rem;
+  color: #374151;
+}

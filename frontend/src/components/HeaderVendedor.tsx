@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../store";
-import { fetchActiveOrders } from "../store/ordenesSlice"; // tu thunk
+import { fetchActiveOrders } from "../store/ordenesSlice"; 
 import "../styles/header.css";
 
 const HeaderVendedor: React.FC = () => {

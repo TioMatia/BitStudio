@@ -312,3 +312,16 @@ font-weight: 500;
   height: 6px;
   border-radius: 3px;
 }
+
+.sort-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+.sort-dropdown select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}

@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
-import { orderApi } from "../api/axios";
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import "../styles/header.css";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const cartItems = useSelector((state: RootState) => state.cart.items);
-
+  const firstName = useSelector((state: RootState) => state.auth.user?.firstName);
   const hasActiveOrders = useSelector((state: RootState) => state.activeOrders.hasActiveOrders);
 
   const handleLogout = () => {
@@ -27,6 +26,13 @@ const Header: React.FC = () => {
     <div className="header-container">
       <div className="header-title">BITSTUDIO</div>
       <div className="header-actions">
+         {firstName && (
+          <div className="user-info">
+            <FaUserCircle className="user-icon" />
+            <span className="user-name">{firstName}</span>
+          </div>
+        )}
+
         {currentPath !== "/shop" && (
           <button className="provider-button" onClick={() => navigate("/shop")}>
             Tiendas

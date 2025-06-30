@@ -149,3 +149,22 @@ border-color: #3678f4;
     opacity: 1;
   }
 }
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+  color: #ffffff;
+  font-weight: 600;
+  gap: 0.4rem;
+  cursor: default;
+}
+
+.user-icon {
+  font-size: 1.4rem;
+  color: #ffffff;
+}
+
+.user-name {
+  font-size: 1rem;
+}

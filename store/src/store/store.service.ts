@@ -96,4 +96,20 @@ constructor(
         store.totalSales = (store.totalSales || 0) + 1;
         return this.storeRepository.save(store);
     }
+
+    async remove(id: number): Promise<{ message: string }> {
+        const store = await this.storeRepository.findOne({ where: { id } });
+        if (!store) throw new NotFoundException('Tienda no encontrada');
+        try {
+            await lastValueFrom(
+            this.httpService.delete(`http://inventory_service:3000/inventory/store/${id}`)
+            );
+        } catch (err) {
+            console.error('Error al eliminar productos del inventario:', err.message);
+            throw new Error('Error al eliminar los productos del inventario');
+        }
+
+        await this.storeRepository.delete(id);
+        return { message: 'Tienda y sus productos eliminados correctamente' };
+        }
 }
