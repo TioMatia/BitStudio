@@ -87,10 +87,7 @@ const LoginPage: React.FC = () => {
             />
           </label>
 
-          <div className="forgot">
-            <a href="#">¿Olvidaste tu contraseña?</a>
-          </div>
-
+          
           <button type="submit" className="button button-primary">
             Continuar
           </button>

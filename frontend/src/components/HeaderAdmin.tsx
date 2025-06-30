@@ -9,13 +9,15 @@ const HeaderAdmin: React.FC = () => {
 
   const currentPath = location.pathname;
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("storeId");
-    navigate("/login");
-  };
+const handleLogout = () => {
+  const confirmLogout = window.confirm("¿Estás seguro de que quieres cerrar sesión?");
+  if (!confirmLogout) return;
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  localStorage.removeItem("userId");
+  navigate("/login");
+};
 
   return (
     <div className="header-container">

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store";
-import { clearCart } from "../store/carritoTienda";
+import { clearCart,setItemQuantity, removeItem  } from "../store/carritoTienda";
 import { storeApi, orderApi } from "../api/axios";
 import "../styles/carrito.css";
+
 
 interface Store {
   id: number;
@@ -41,7 +42,10 @@ const CarritoPage: React.FC = () => {
 
 
   const handleClearCart = () => {
-    dispatch(clearCart());
+    const confirmClear = window.confirm("¿Estás seguro de que deseas vaciar el carrito?");
+    if (confirmClear) {
+      dispatch(clearCart());
+    }
   };
 
 const handlePago = async () => {
@@ -122,11 +126,11 @@ const handleCrearOrden = async () => {
   return (
     <div className="cart-page">
       <div className="cart-items">
-        {storeData && (
-          <h2 className="store-title">
-            Tienda: <a href={`/shop/${cart.storeId}`}>{storeData.name}</a>
-          </h2>
-        )}
+          {storeData && cart.items.length > 0 && (
+            <h2 className="store-title">
+              Tienda: <a href={`/shop/${cart.storeId}`}>{storeData.name}</a>
+            </h2>
+          )}
         {cart.items.length === 0 ? (
           <p>El carrito está vacío.</p>
         ) : (
@@ -140,7 +144,33 @@ const handleCrearOrden = async () => {
                   maximumFractionDigits: 0,
                 }) }
               </p>
-              <p>Cantidad: {item.quantity}</p>
+              <div className="cart-quantity-controls">
+                <button
+                  onClick={() => {
+                    if (item.quantity > 1) {
+                      dispatch(setItemQuantity({ itemId: item.id, quantity: item.quantity - 1 }));
+                    } else {
+                      const confirmDelete = window.confirm("¿Estás seguro que quieres eliminar este producto del carrito?");
+                      if (confirmDelete) {
+                        dispatch(removeItem(item.id));
+                      }
+                    }
+                  }}
+                >
+                  −
+                </button>
+                <span>{item.quantity}</span>
+                  <button
+                    onClick={() => {
+                      if (item.quantity < item.stock) {
+                        dispatch(setItemQuantity({ itemId: item.id, quantity: item.quantity + 1 }));
+                      }
+                    }}
+                    disabled={item.quantity >= item.stock}
+                  >
+                    +
+                  </button>
+              </div>
               <p>Subtotal: {" "} {(item.price*item.quantity).toLocaleString("es-CL", {
                   style: "currency",
                   currency: "CLP",
@@ -184,11 +214,7 @@ const handleCrearOrden = async () => {
                   maximumFractionDigits: 0,
                 })})`}
               </label>
-            </div>
-
-
-              
-            
+            </div>          
             {shippingMethod === "delivery" && (
               <div className="address-input">
                 <label>Dirección de entrega:</label>

@@ -20,6 +20,7 @@ interface InventoryItem {
   price: number;
   quantity: number;
   image?: string; 
+  categories?: { id: number; name: string }[];
 }
 
 
@@ -57,6 +58,9 @@ const InventarioTienda: React.FC = () => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
 
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
@@ -98,12 +102,29 @@ const InventarioTienda: React.FC = () => {
       }
     }, [items]);
 
-    const filteredItems = items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()) &&
-        item.price >= priceRange[0] &&
-        item.price <= priceRange[1]
-    );
+    useEffect(() => {
+      const fetchCategories = async () => {
+        try {
+          const res = await inventoryApi.get(`/categories/store/${storeId}`);
+          setCategories(res.data);
+        } catch (err) {
+          console.error("Error al cargar categorías:", err);
+        }
+      };
+
+      if (storeId) {
+        fetchCategories();
+      }
+    }, [storeId]);
+
+  const filteredItems = items.filter(
+    (item) =>
+      item.name.toLowerCase().includes(search.toLowerCase()) &&
+      item.price >= priceRange[0] &&
+      item.price <= priceRange[1] &&
+      (selectedCategoryIds.length === 0 || 
+      item.categories?.some((cat) => selectedCategoryIds.includes(cat.id)))
+  );
 
   return (
     <div className="inventario-page">
@@ -143,15 +164,48 @@ const InventarioTienda: React.FC = () => {
         </div>
       )}
 
-      <input
-        type="text"
-        className="search-bar"
-        placeholder="Buscar productos..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
       {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <div className="filter-toolbar">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="Buscar productos..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <div className="category-dropdown-wrapper">
+          <button
+            className="category-toggle-button"
+            onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+          >
+            Filtrar por categorías ⌄
+          </button>
+          {categoryDropdownOpen && (
+            <div className="category-dropdown">
+              {categories.map((cat) => (
+                <label key={cat.id} className="category-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategoryIds.includes(cat.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedCategoryIds((prev) => [...prev, cat.id]);
+                      } else {
+                        setSelectedCategoryIds((prev) =>
+                          prev.filter((id) => id !== cat.id)
+                        );
+                      }
+                    }}
+                  />
+                  {cat.name}
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       {maxPrice > minPrice && (
         <div className="price-filter">
@@ -265,6 +319,7 @@ const InventarioTienda: React.FC = () => {
                                   price: item.price,
                                   quantity: 1,
                                   inventoryId: item.id, 
+                                  stock: item.quantity,
                                 },
                               })
                             );

@@ -70,7 +70,11 @@ const MyStorePage: React.FC = () => {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100000);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
-  
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const dispatch = useDispatch<AppDispatch>()
   
   const fetchStoreAndInventory = async () => {
@@ -83,6 +87,9 @@ const MyStorePage: React.FC = () => {
 
     const invRes = await inventoryApi.get(`/inventory/store/${res.data.id}`);
     setItems(invRes.data);
+
+    const catRes = await inventoryApi.get(`/categories/store/${res.data.id}`);
+    setCategories(catRes.data);
 
     const provRes = await storeApi.get(`/stores/${res.data.id}/providers`);
     setProviders(provRes.data);
@@ -104,6 +111,22 @@ const MyStorePage: React.FC = () => {
       setMaxPrice(max);
       setPriceRange([min, max]);
     }
+  }, [items]);
+
+  useEffect(() => {
+    const uniqueCategories: { id: number; name: string }[] = [];
+    const categorySet = new Set<number>();
+
+    items.forEach(item => {
+      item.categories?.forEach(cat => {
+        if (!categorySet.has(cat.id)) {
+          categorySet.add(cat.id);
+          uniqueCategories.push(cat);
+        }
+      });
+    });
+
+    setCategories(uniqueCategories);
   }, [items]);
 
   const handleDelete = async (item: InventoryItem) => {
@@ -186,55 +209,103 @@ const MyStorePage: React.FC = () => {
           </div>
            
           <div className="inventory-section">
-             {providers.length > 0 && (
-              <div className="filter-provider">
-                <label htmlFor="providerFilter">Filtrar por proveedor:</label>
-                <select
-                  id="providerFilter"
-                  value={selectedProviderId}
-                  onChange={(e) => {
-                    const val = e.target.value === "" ? "" : Number(e.target.value);
-                    setSelectedProviderId(val);
-                  }}
-                >
-                  <option value="">Todos</option>
-                  {providers.map((prov) => (
-                    <option key={prov.id} value={prov.id}>
-                      {prov.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+              <div className="inventory-toolbar limited-width">
+                <div className="filters-container">
+                  <div className="top-filters-row">
+                    <input
+                      type="text"
+                      placeholder="Buscar por nombre o descripción"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="search-input"
+                    />
 
-            <div className="inventory-toolbar">
-              {items.length > 1 && (
-                <div className="filter-price-range">
-                  <label>Filtrar por precio:</label>
-                  <Slider
-                    range
-                    min={minPrice}
-                    max={maxPrice}
-                    step={1}
-                    value={priceRange}
-                    onChange={(value) => setPriceRange(value as [number, number])}
-                  />
-                  <div className="price-labels">
-                    <span>${priceRange[0].toLocaleString("es-CL")}</span>
-                    <span>${priceRange[1].toLocaleString("es-CL")}</span>
+                    <div className="category-dropdown-wrapper">
+                      <button
+                        className="category-toggle-button"
+                        onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+                      >
+                        Filtrar por categorías ⌄
+                      </button>
+                      {categoryDropdownOpen && (
+                        <div className="category-dropdown">
+                          {categories.map((cat) => (
+                            <label key={cat.id} className="category-checkbox">
+                              <input
+                                type="checkbox"
+                                checked={selectedCategoryIds.includes(cat.id)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedCategoryIds((prev) => [...prev, cat.id]);
+                                  } else {
+                                    setSelectedCategoryIds((prev) =>
+                                      prev.filter((id) => id !== cat.id)
+                                    );
+                                  }
+                                }}
+                              />
+                              {cat.name}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {providers.length > 0 && (
+                      <div className="filter-provider">
+                        <select
+                          id="providerFilter"
+                          value={selectedProviderId}
+                          onChange={(e) => {
+                            const val = e.target.value === "" ? "" : Number(e.target.value);
+                            setSelectedProviderId(val);
+                          }}
+                        >
+                          <option value="">Filtrar por proveedor</option>
+                          {providers.map((prov) => (
+                            <option key={prov.id} value={prov.id}>
+                              {prov.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bottom-filter-row">
+                    {items.length > 1 && (
+                      <div className="filter-price-range">
+                        <label>Filtrar por precio:</label>
+                        <Slider
+                          range
+                          min={minPrice}
+                          max={maxPrice}
+                          step={10}
+                          value={priceRange}
+                          onChange={(value) => setPriceRange(value as [number, number])}
+                        />
+                        <div className="price-labels">
+                          <span>${priceRange[0].toLocaleString("es-CL")}</span>
+                          <span>${priceRange[1].toLocaleString("es-CL")}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
-              <button onClick={() => setModalOpen(true)} className="add-product-button">
-                Agregar producto(s)
-              </button>
-            </div>
+
+                <button onClick={() => setModalOpen(true)} className="add-product-button">
+                  Agregar producto(s)
+                </button>
+              </div>
             <div className="inventory-grid">
               <AnimatePresence>
                 {items
                   .filter(
                     (item) =>
-                      (selectedProviderId === "" ? true : item.providerName === providers.find(p => p.id === selectedProviderId)?.name) &&
+                      (selectedProviderId === "" || item.providerName === providers.find(p => p.id === selectedProviderId)?.name) &&
+                      (selectedCategoryIds.length === 0 || item.categories?.some(cat => selectedCategoryIds.includes(cat.id))) &&
+                      (item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      item.description?.toLowerCase().includes(searchTerm.toLowerCase())) &&
                       item.price >= priceRange[0] &&
                       item.price <= priceRange[1]
                   )

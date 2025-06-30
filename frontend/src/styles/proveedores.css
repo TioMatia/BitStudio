@@ -57,9 +57,18 @@
   color: white;
 }
 
+.acciones .eliminar:hover {
+  background-color: #a72b1e;
+}
+
 .acciones button:not(.eliminar) {
   background-color: #3498db;
   color: white;
+}
+
+.acciones button:not(.eliminar):hover {
+  background-color: #146aa3;
+
 }
 
 .form-panel {
@@ -88,10 +97,19 @@
 }
 
 .form-panel button:first-of-type {
-  background-color: #2ecc71;
+  background-color: #007bff;
   color: white;
+}
+
+.form-panel button:first-of-type:hover {
+  background-color: #0056b3;
 }
 
 .form-panel .cancelar {
   background-color: #bdc3c7;
 }
+
+.form-panel .cancelar:hover{
+  background-color: #969696;
+}
+
