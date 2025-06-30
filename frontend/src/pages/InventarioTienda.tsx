@@ -187,48 +187,54 @@ const InventarioTienda: React.FC = () => {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div className="filter-toolbar">
-        <input
-          type="text"
-          className="search-bar"
-          placeholder="Buscar productos..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        {items.length > 0 && (
+          <div className="filter-toolbar">
+            {/* Buscar */}
+            <input
+              type="text"
+              className="search-bar"
+              placeholder="Buscar productos..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-        <div className="category-dropdown-wrapper">
-          <button
-            className="category-toggle-button"
-            onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
-          >
-            Filtrar por categorías ⌄
-          </button>
-          {categoryDropdownOpen && (
-            <div className="category-dropdown">
-              {categories.map((cat) => (
-                <label key={cat.id} className="category-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={selectedCategoryIds.includes(cat.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedCategoryIds((prev) => [...prev, cat.id]);
-                      } else {
-                        setSelectedCategoryIds((prev) =>
-                          prev.filter((id) => id !== cat.id)
-                        );
-                      }
-                    }}
-                  />
-                  {cat.name}
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+            {/* Categorías */}
+            {categories.length > 0 && (
+              <div className="category-dropdown-wrapper">
+                <button
+                  className="category-toggle-button"
+                  onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+                >
+                  Filtrar por categorías ⌄
+                </button>
+                {categoryDropdownOpen && (
+                  <div className="category-dropdown">
+                    {categories.map((cat) => (
+                      <label key={cat.id} className="category-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={selectedCategoryIds.includes(cat.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedCategoryIds((prev) => [...prev, cat.id]);
+                            } else {
+                              setSelectedCategoryIds((prev) =>
+                                prev.filter((id) => id !== cat.id)
+                              );
+                            }
+                          }}
+                        />
+                        {cat.name}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
-      {maxPrice > minPrice && (
+      {items.length > 1 && maxPrice > minPrice && (
         <div className="price-filter">
           <h4>Filtrar por precio</h4>
           <Slider

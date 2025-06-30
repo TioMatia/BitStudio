@@ -155,4 +155,11 @@ export class InventoryService {
 
     return { message: 'Stock actualizado correctamente' };
   }
+
+  async findByNameAndStoreId(name: string, storeId: number): Promise<Inventory | null> {
+    return await this.inventoryRepo.findOne({
+      where: { name, storeId },
+    });
+  }
+
 }

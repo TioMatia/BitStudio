@@ -123,7 +123,7 @@ const AdminDashboard = () => {
 
         const res = await orderApi.get("/orders", { params });
         setOrders(res.data.data);
-        setTotalPagesOrders(res.data.pageCount);
+        setTotalPagesOrders(Math.max(res.data.pageCount, 1));
       } catch (error) {
         console.error("Error al cargar órdenes:", error);
       } finally {
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
         });
 
         setResumenPorCliente(parsedResumen);
-        setCurrentPageClientes(1); // reset al cambiar filtros
+        setCurrentPageClientes(1); 
       } catch (error) {
         console.error("Error al cargar resumen por cliente:", error);
       }
@@ -227,8 +227,24 @@ const maxVentas = Math.max(...ordersByStore.map(o => o.ventas));
     (currentPageClientes - 1) * pageSizeClientes,
     currentPageClientes * pageSizeClientes
   );
-  const totalPagesClientes = Math.ceil(resumenPorCliente.length / pageSizeClientes);
+  const [totalPagesClientes, setTotalPagesClientes] = useState(1);
+  
+    useEffect(() => {
+      if (currentPageOrders > totalPagesOrders) {
+        setCurrentPageOrders(1);
+      }
+    }, [totalPagesOrders]);
 
+    useEffect(() => {
+      if (currentPageClientes > totalPagesClientes) {
+        setCurrentPageClientes(1);
+      }
+    }, [totalPagesClientes]);
+
+    useEffect(() => {
+      const totalPages = Math.ceil(resumenPorCliente.length / pageSizeClientes);
+      setTotalPagesClientes(Math.max(totalPages, 1));
+    }, [resumenPorCliente]);
   if (loading) return <p className="text-center mt-10">Cargando estadísticas...</p>;
 
   return (

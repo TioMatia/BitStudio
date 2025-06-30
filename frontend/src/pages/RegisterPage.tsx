@@ -37,11 +37,11 @@ const RegisterPage: React.FC = () => {
             navigate("/login");
         }, 1500);
       } else {
-        setMessage("❌ No se pudo registrar");
+        setMessage("No se pudo registrar");
       }
     } catch (error: any) {
       console.error(error);
-      setMessage("❌ Error de conexión o usuario ya existe");
+      setMessage("Error de conexión o usuario ya existe");
     }
   };
 
